@@ -1,0 +1,145 @@
+#! /usr/local/Cellar/icarus-verilog/0.9.7/bin/vvp
+:ivl_version "0.9.7 " "(v0_9_7)";
+:vpi_time_precision + 0;
+:vpi_module "system";
+:vpi_module "v2005_math";
+:vpi_module "va_math";
+S_0x7ffbaac0d2a0 .scope module, "adder_t" "adder_t" 2 1;
+ .timescale 0 0;
+v0x7ffbaac21800_0 .var/s "D", 5 0;
+RS_0x100e2a5a8 .resolv tri, L_0x7ffbaac21fb0, L_0x7ffbaac22820, L_0x7ffbaac230c0, C4<zzz>;
+v0x7ffbaac21880_0 .net8/s "S", 2 0, RS_0x100e2a5a8; 3 drivers
+v0x7ffbaac21900_0 .net "V", 0 0, L_0x7ffbaac23480; 1 drivers
+L_0x7ffbaac234e0 .part v0x7ffbaac21800_0, 3, 3;
+L_0x7ffbaac235f0 .part v0x7ffbaac21800_0, 0, 3;
+S_0x7ffbaac0d000 .scope module, "adder" "HW5_1" 2 6, 3 11, S_0x7ffbaac0d2a0;
+ .timescale 0 0;
+L_0x7ffbaac23480 .functor XOR 1, L_0x7ffbaac22700, L_0x7ffbaac22f60, C4<0>, C4<0>;
+v0x7ffbaac212d0_0 .net "A", 2 0, L_0x7ffbaac234e0; 1 drivers
+v0x7ffbaac21360_0 .net "B", 2 0, L_0x7ffbaac235f0; 1 drivers
+v0x7ffbaac213f0_0 .net "C0", 0 0, C4<0>; 1 drivers
+v0x7ffbaac21490_0 .net "C1", 0 0, L_0x7ffbaac21ed0; 1 drivers
+v0x7ffbaac21550_0 .net "C2", 0 0, L_0x7ffbaac22700; 1 drivers
+v0x7ffbaac21640_0 .net "C3", 0 0, L_0x7ffbaac22f60; 1 drivers
+v0x7ffbaac216c0_0 .alias "S", 2 0, v0x7ffbaac21880_0;
+v0x7ffbaac21780_0 .alias "V", 0 0, v0x7ffbaac21900_0;
+L_0x7ffbaac21fb0 .part/pv L_0x7ffbaac21aa0, 0, 1, 3;
+L_0x7ffbaac220c0 .part L_0x7ffbaac234e0, 0, 1;
+L_0x7ffbaac221d0 .part L_0x7ffbaac235f0, 0, 1;
+L_0x7ffbaac22820 .part/pv L_0x7ffbaac22300, 1, 1, 3;
+L_0x7ffbaac228f0 .part L_0x7ffbaac234e0, 1, 1;
+L_0x7ffbaac22a00 .part L_0x7ffbaac235f0, 1, 1;
+L_0x7ffbaac230c0 .part/pv L_0x7ffbaac22b70, 2, 1, 3;
+L_0x7ffbaac23210 .part L_0x7ffbaac234e0, 2, 1;
+L_0x7ffbaac23320 .part L_0x7ffbaac235f0, 2, 1;
+S_0x7ffbaac20c00 .scope module, "F1" "full_adder" 3 20, 3 1, S_0x7ffbaac0d000;
+ .timescale 0 0;
+L_0x7ffbaac21a00 .functor XOR 1, L_0x7ffbaac220c0, L_0x7ffbaac221d0, C4<0>, C4<0>;
+L_0x7ffbaac21aa0 .functor XOR 1, L_0x7ffbaac21a00, C4<0>, C4<0>, C4<0>;
+L_0x7ffbaac21b80 .functor AND 1, L_0x7ffbaac220c0, L_0x7ffbaac221d0, C4<1>, C4<1>;
+L_0x7ffbaac21c60 .functor AND 1, L_0x7ffbaac221d0, C4<0>, C4<1>, C4<1>;
+L_0x7ffbaac21d60 .functor OR 1, L_0x7ffbaac21b80, L_0x7ffbaac21c60, C4<0>, C4<0>;
+L_0x7ffbaac21e70 .functor AND 1, L_0x7ffbaac220c0, C4<0>, C4<1>, C4<1>;
+L_0x7ffbaac21ed0 .functor OR 1, L_0x7ffbaac21d60, L_0x7ffbaac21e70, C4<0>, C4<0>;
+v0x7ffbaac20ce0_0 .alias "C", 0 0, v0x7ffbaac21490_0;
+v0x7ffbaac20d80_0 .net "S", 0 0, L_0x7ffbaac21aa0; 1 drivers
+v0x7ffbaac20e00_0 .net *"_s0", 0 0, L_0x7ffbaac21a00; 1 drivers
+v0x7ffbaac20e80_0 .net *"_s10", 0 0, L_0x7ffbaac21e70; 1 drivers
+v0x7ffbaac20f00_0 .net *"_s4", 0 0, L_0x7ffbaac21b80; 1 drivers
+v0x7ffbaac20fb0_0 .net *"_s6", 0 0, L_0x7ffbaac21c60; 1 drivers
+v0x7ffbaac21040_0 .net *"_s8", 0 0, L_0x7ffbaac21d60; 1 drivers
+v0x7ffbaac21100_0 .net "x", 0 0, L_0x7ffbaac220c0; 1 drivers
+v0x7ffbaac21180_0 .net "y", 0 0, L_0x7ffbaac221d0; 1 drivers
+v0x7ffbaac21250_0 .alias "z", 0 0, v0x7ffbaac213f0_0;
+S_0x7ffbaac20530 .scope module, "F2" "full_adder" 3 21, 3 1, S_0x7ffbaac0d000;
+ .timescale 0 0;
+L_0x7ffbaac21be0 .functor XOR 1, L_0x7ffbaac228f0, L_0x7ffbaac22a00, C4<0>, C4<0>;
+L_0x7ffbaac22300 .functor XOR 1, L_0x7ffbaac21be0, L_0x7ffbaac21ed0, C4<0>, C4<0>;
+L_0x7ffbaac22460 .functor AND 1, L_0x7ffbaac228f0, L_0x7ffbaac22a00, C4<1>, C4<1>;
+L_0x7ffbaac22500 .functor AND 1, L_0x7ffbaac22a00, L_0x7ffbaac21ed0, C4<1>, C4<1>;
+L_0x7ffbaac22580 .functor OR 1, L_0x7ffbaac22460, L_0x7ffbaac22500, C4<0>, C4<0>;
+L_0x7ffbaac226a0 .functor AND 1, L_0x7ffbaac228f0, L_0x7ffbaac21ed0, C4<1>, C4<1>;
+L_0x7ffbaac22700 .functor OR 1, L_0x7ffbaac22580, L_0x7ffbaac226a0, C4<0>, C4<0>;
+v0x7ffbaac20610_0 .alias "C", 0 0, v0x7ffbaac21550_0;
+v0x7ffbaac206b0_0 .net "S", 0 0, L_0x7ffbaac22300; 1 drivers
+v0x7ffbaac20730_0 .net *"_s0", 0 0, L_0x7ffbaac21be0; 1 drivers
+v0x7ffbaac207b0_0 .net *"_s10", 0 0, L_0x7ffbaac226a0; 1 drivers
+v0x7ffbaac20830_0 .net *"_s4", 0 0, L_0x7ffbaac22460; 1 drivers
+v0x7ffbaac208e0_0 .net *"_s6", 0 0, L_0x7ffbaac22500; 1 drivers
+v0x7ffbaac20970_0 .net *"_s8", 0 0, L_0x7ffbaac22580; 1 drivers
+v0x7ffbaac20a30_0 .net "x", 0 0, L_0x7ffbaac228f0; 1 drivers
+v0x7ffbaac20ab0_0 .net "y", 0 0, L_0x7ffbaac22a00; 1 drivers
+v0x7ffbaac20b80_0 .alias "z", 0 0, v0x7ffbaac21490_0;
+S_0x7ffbaac108c0 .scope module, "F3" "full_adder" 3 22, 3 1, S_0x7ffbaac0d000;
+ .timescale 0 0;
+L_0x7ffbaac22b10 .functor XOR 1, L_0x7ffbaac23210, L_0x7ffbaac23320, C4<0>, C4<0>;
+L_0x7ffbaac22b70 .functor XOR 1, L_0x7ffbaac22b10, L_0x7ffbaac22700, C4<0>, C4<0>;
+L_0x7ffbaac22c90 .functor AND 1, L_0x7ffbaac23210, L_0x7ffbaac23320, C4<1>, C4<1>;
+L_0x7ffbaac22d30 .functor AND 1, L_0x7ffbaac23320, L_0x7ffbaac22700, C4<1>, C4<1>;
+L_0x7ffbaac22db0 .functor OR 1, L_0x7ffbaac22c90, L_0x7ffbaac22d30, C4<0>, C4<0>;
+L_0x7ffbaac22f00 .functor AND 1, L_0x7ffbaac23210, L_0x7ffbaac22700, C4<1>, C4<1>;
+L_0x7ffbaac22f60 .functor OR 1, L_0x7ffbaac22db0, L_0x7ffbaac22f00, C4<0>, C4<0>;
+v0x7ffbaac10a20_0 .alias "C", 0 0, v0x7ffbaac21640_0;
+v0x7ffbaac1ffb0_0 .net "S", 0 0, L_0x7ffbaac22b70; 1 drivers
+v0x7ffbaac20040_0 .net *"_s0", 0 0, L_0x7ffbaac22b10; 1 drivers
+v0x7ffbaac200c0_0 .net *"_s10", 0 0, L_0x7ffbaac22f00; 1 drivers
+v0x7ffbaac20150_0 .net *"_s4", 0 0, L_0x7ffbaac22c90; 1 drivers
+v0x7ffbaac20210_0 .net *"_s6", 0 0, L_0x7ffbaac22d30; 1 drivers
+v0x7ffbaac202a0_0 .net *"_s8", 0 0, L_0x7ffbaac22db0; 1 drivers
+v0x7ffbaac20360_0 .net "x", 0 0, L_0x7ffbaac23210; 1 drivers
+v0x7ffbaac203e0_0 .net "y", 0 0, L_0x7ffbaac23320; 1 drivers
+v0x7ffbaac204b0_0 .alias "z", 0 0, v0x7ffbaac21550_0;
+    .scope S_0x7ffbaac0d2a0;
+T_0 ;
+    %vpi_call 2 17 "$monitor", $time, "--> A = %b, B = %b, S = %d, Overflow = %b", &PV<v0x7ffbaac21800_0, 3, 3>, &PV<v0x7ffbaac21800_0, 0, 3>, v0x7ffbaac21880_0, v0x7ffbaac21900_0;
+    %end;
+    .thread T_0;
+    .scope S_0x7ffbaac0d2a0;
+T_1 ;
+    %set/v v0x7ffbaac21800_0, 0, 6;
+    %movi 8, 63, 7;
+T_1.0 %cmp/s 0, 8, 7;
+    %jmp/0xz T_1.1, 5;
+    %add 8, 1, 7;
+    %delay 10, 0;
+    %load/v 15, v0x7ffbaac21800_0, 6;
+    %mov 21, 20, 1;
+    %mov 22, 20, 1;
+    %mov 23, 20, 1;
+    %mov 24, 20, 1;
+    %mov 25, 20, 1;
+    %mov 26, 20, 1;
+    %mov 27, 20, 1;
+    %mov 28, 20, 1;
+    %mov 29, 20, 1;
+    %mov 30, 20, 1;
+    %mov 31, 20, 1;
+    %mov 32, 20, 1;
+    %mov 33, 20, 1;
+    %mov 34, 20, 1;
+    %mov 35, 20, 1;
+    %mov 36, 20, 1;
+    %mov 37, 20, 1;
+    %mov 38, 20, 1;
+    %mov 39, 20, 1;
+    %mov 40, 20, 1;
+    %mov 41, 20, 1;
+    %mov 42, 20, 1;
+    %mov 43, 20, 1;
+    %mov 44, 20, 1;
+    %mov 45, 20, 1;
+    %mov 46, 20, 1;
+    %addi 15, 1, 32;
+    %set/v v0x7ffbaac21800_0, 15, 6;
+    %jmp T_1.0;
+T_1.1 ;
+    %delay 10, 0;
+    %vpi_call 2 29 "$finish";
+    %end;
+    .thread T_1;
+# The file index is used to find the file name in the following table.
+:file_names 4;
+    "N/A";
+    "<interactive>";
+    "HW5_1_t.v";
+    "HW5_1.v";
