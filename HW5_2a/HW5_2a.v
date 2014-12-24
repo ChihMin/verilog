@@ -10,12 +10,9 @@ always@*
 		x = a;
 		y = b;
 	end
-	else if( a < b ) begin
+	else begin
 		x = b;
 		y = a;
 	end
-	else begin
-		x = a;
-		y = b;
-	end
+	
 endmodule

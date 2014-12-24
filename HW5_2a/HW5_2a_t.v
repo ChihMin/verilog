@@ -10,7 +10,7 @@ module HW5_2a_t;
 	);
 
 	initial begin
-		$monitor($time, " --> Max( %d , %d ) is %d, other is %d", D[3:2], D[1:0], x, y);
+		$monitor($time, " --> Max( %d , %d ) is %d, Min is %d", D[3:2], D[1:0], x, y);
 	end
 
 	initial begin

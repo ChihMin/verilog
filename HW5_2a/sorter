@@ -4,68 +4,57 @@
 :vpi_module "system";
 :vpi_module "v2005_math";
 :vpi_module "va_math";
-S_0x7f82d3d04b80 .scope module, "HW5_2a_t" "HW5_2a_t" 2 1;
+S_0x7f97604086d0 .scope module, "HW5_2a_t" "HW5_2a_t" 2 1;
  .timescale 0 0;
-v0x7f82d3d155d0_0 .var "D", 3 0;
-v0x7f82d3d15670_0 .net "x", 1 0, v0x7f82d3d154c0_0; 1 drivers
-v0x7f82d3d15710_0 .net "y", 1 0, v0x7f82d3d15540_0; 1 drivers
-L_0x7f82d3d157d0 .part v0x7f82d3d155d0_0, 2, 2;
-L_0x7f82d3d158a0 .part v0x7f82d3d155d0_0, 0, 2;
-S_0x7f82d3d05620 .scope module, "sorter" "HW5_2a" 2 5, 3 1, S_0x7f82d3d04b80;
+v0x7f9760419110_0 .var "D", 3 0;
+v0x7f97604191b0_0 .net "x", 1 0, v0x7f9760419000_0; 1 drivers
+v0x7f9760419250_0 .net "y", 1 0, v0x7f9760419080_0; 1 drivers
+L_0x7f9760419310 .part v0x7f9760419110_0, 2, 2;
+L_0x7f97604193e0 .part v0x7f9760419110_0, 0, 2;
+S_0x7f9760409160 .scope module, "sorter" "HW5_2a" 2 5, 3 1, S_0x7f97604086d0;
  .timescale 0 0;
-v0x7f82d3d04930_0 .net "a", 1 0, L_0x7f82d3d157d0; 1 drivers
-v0x7f82d3d15430_0 .net "b", 1 0, L_0x7f82d3d158a0; 1 drivers
-v0x7f82d3d154c0_0 .var "x", 1 0;
-v0x7f82d3d15540_0 .var "y", 1 0;
-E_0x7f82d3d01cd0 .event edge, v0x7f82d3d04930_0, v0x7f82d3d15430_0;
-    .scope S_0x7f82d3d05620;
+v0x7f9760408480_0 .net "a", 1 0, L_0x7f9760419310; 1 drivers
+v0x7f9760418f70_0 .net "b", 1 0, L_0x7f97604193e0; 1 drivers
+v0x7f9760419000_0 .var "x", 1 0;
+v0x7f9760419080_0 .var "y", 1 0;
+E_0x7f9760404500 .event edge, v0x7f9760408480_0, v0x7f9760418f70_0;
+    .scope S_0x7f9760409160;
 T_0 ;
-    %wait E_0x7f82d3d01cd0;
-    %load/v 8, v0x7f82d3d15430_0, 2;
-    %load/v 10, v0x7f82d3d04930_0, 2;
+    %wait E_0x7f9760404500;
+    %load/v 8, v0x7f9760418f70_0, 2;
+    %load/v 10, v0x7f9760408480_0, 2;
     %cmp/u 8, 10, 2;
     %jmp/0xz  T_0.0, 5;
-    %load/v 8, v0x7f82d3d04930_0, 2;
-    %set/v v0x7f82d3d154c0_0, 8, 2;
-    %load/v 8, v0x7f82d3d15430_0, 2;
-    %set/v v0x7f82d3d15540_0, 8, 2;
+    %load/v 8, v0x7f9760408480_0, 2;
+    %set/v v0x7f9760419000_0, 8, 2;
+    %load/v 8, v0x7f9760418f70_0, 2;
+    %set/v v0x7f9760419080_0, 8, 2;
     %jmp T_0.1;
 T_0.0 ;
-    %load/v 8, v0x7f82d3d04930_0, 2;
-    %load/v 10, v0x7f82d3d15430_0, 2;
-    %cmp/u 8, 10, 2;
-    %jmp/0xz  T_0.2, 5;
-    %load/v 8, v0x7f82d3d15430_0, 2;
-    %set/v v0x7f82d3d154c0_0, 8, 2;
-    %load/v 8, v0x7f82d3d04930_0, 2;
-    %set/v v0x7f82d3d15540_0, 8, 2;
-    %jmp T_0.3;
-T_0.2 ;
-    %load/v 8, v0x7f82d3d04930_0, 2;
-    %set/v v0x7f82d3d154c0_0, 8, 2;
-    %load/v 8, v0x7f82d3d15430_0, 2;
-    %set/v v0x7f82d3d15540_0, 8, 2;
-T_0.3 ;
+    %load/v 8, v0x7f9760418f70_0, 2;
+    %set/v v0x7f9760419000_0, 8, 2;
+    %load/v 8, v0x7f9760408480_0, 2;
+    %set/v v0x7f9760419080_0, 8, 2;
 T_0.1 ;
     %jmp T_0;
     .thread T_0, $push;
-    .scope S_0x7f82d3d04b80;
+    .scope S_0x7f97604086d0;
 T_1 ;
-    %vpi_call 2 13 "$monitor", $time, " --> Max( %d , %d ) is %d, other is %d", &PV<v0x7f82d3d155d0_0, 2, 2>, &PV<v0x7f82d3d155d0_0, 0, 2>, v0x7f82d3d15670_0, v0x7f82d3d15710_0;
+    %vpi_call 2 13 "$monitor", $time, " --> Max( %d , %d ) is %d, Min is %d", &PV<v0x7f9760419110_0, 2, 2>, &PV<v0x7f9760419110_0, 0, 2>, v0x7f97604191b0_0, v0x7f9760419250_0;
     %end;
     .thread T_1;
-    .scope S_0x7f82d3d04b80;
+    .scope S_0x7f97604086d0;
 T_2 ;
-    %set/v v0x7f82d3d155d0_0, 0, 4;
+    %set/v v0x7f9760419110_0, 0, 4;
     %movi 8, 15, 5;
 T_2.0 %cmp/s 0, 8, 5;
     %jmp/0xz T_2.1, 5;
     %add 8, 1, 5;
     %delay 10, 0;
-    %load/v 13, v0x7f82d3d155d0_0, 4;
+    %load/v 13, v0x7f9760419110_0, 4;
     %mov 17, 0, 28;
     %addi 13, 1, 32;
-    %set/v v0x7f82d3d155d0_0, 13, 4;
+    %set/v v0x7f9760419110_0, 13, 4;
     %jmp T_2.0;
 T_2.1 ;
     %delay 20, 0;
