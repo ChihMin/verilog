@@ -1,0 +1,78 @@
+#! /usr/local/Cellar/icarus-verilog/0.9.7/bin/vvp
+:ivl_version "0.9.7 " "(v0_9_7)";
+:vpi_time_precision + 0;
+:vpi_module "system";
+:vpi_module "v2005_math";
+:vpi_module "va_math";
+S_0x7feff1d010f0 .scope module, "Prac" "Prac" 2 1;
+ .timescale 0 0;
+v0x7feff1d155a0_0 .var "clk", 0 0;
+v0x7feff1d15650_0 .var "in", 31 0;
+v0x7feff1d156f0_0 .net "out", 31 0, v0x7feff1d15490_0; 1 drivers
+v0x7feff1d157b0_0 .var "rst", 0 0;
+S_0x7feff1d055f0 .scope module, "f1" "flipflop" 2 6, 3 1, S_0x7feff1d010f0;
+ .timescale 0 0;
+v0x7feff1d00040_0 .net "clk", 0 0, v0x7feff1d155a0_0; 1 drivers
+v0x7feff1d15400_0 .net "in", 31 0, v0x7feff1d15650_0; 1 drivers
+v0x7feff1d15490_0 .var "out", 31 0;
+v0x7feff1d15510_0 .net "rst", 0 0, v0x7feff1d157b0_0; 1 drivers
+E_0x7feff1d007f0 .event posedge, v0x7feff1d15510_0, v0x7feff1d00040_0;
+    .scope S_0x7feff1d055f0;
+T_0 ;
+    %wait E_0x7feff1d007f0;
+    %load/v 8, v0x7feff1d15510_0, 1;
+    %jmp/0xz  T_0.0, 8;
+    %ix/load 0, 32, 0;
+    %assign/v0 v0x7feff1d15490_0, 0, 0;
+    %jmp T_0.1;
+T_0.0 ;
+    %load/v 8, v0x7feff1d15490_0, 32;
+    %mov 40, 0, 1;
+    %addi 8, 1, 33;
+    %ix/load 0, 32, 0;
+    %assign/v0 v0x7feff1d15490_0, 0, 8;
+T_0.1 ;
+    %jmp T_0;
+    .thread T_0;
+    .scope S_0x7feff1d010f0;
+T_1 ;
+    %set/v v0x7feff1d157b0_0, 1, 1;
+    %set/v v0x7feff1d15650_0, 0, 32;
+    %set/v v0x7feff1d155a0_0, 0, 1;
+    %delay 10, 0;
+    %set/v v0x7feff1d157b0_0, 0, 1;
+    %end;
+    .thread T_1;
+    .scope S_0x7feff1d010f0;
+T_2 ;
+    %delay 10, 0;
+    %load/v 8, v0x7feff1d155a0_0, 1;
+    %inv 8, 1;
+    %set/v v0x7feff1d155a0_0, 8, 1;
+    %load/v 8, v0x7feff1d156f0_0, 32;
+    %cmpi/u 8, 5, 32;
+    %jmp/0xz  T_2.0, 4;
+    %set/v v0x7feff1d157b0_0, 1, 1;
+    %jmp T_2.1;
+T_2.0 ;
+    %set/v v0x7feff1d157b0_0, 0, 1;
+T_2.1 ;
+    %jmp T_2;
+    .thread T_2;
+    .scope S_0x7feff1d010f0;
+T_3 ;
+    %delay 300, 0;
+    %vpi_call 2 21 "$finish";
+    %end;
+    .thread T_3;
+    .scope S_0x7feff1d010f0;
+T_4 ;
+    %vpi_call 2 25 "$monitor", $time, " --> clk = %d, rst = %d, in = %d, out = %d", v0x7feff1d155a0_0, v0x7feff1d157b0_0, v0x7feff1d15650_0, v0x7feff1d156f0_0;
+    %end;
+    .thread T_4;
+# The file index is used to find the file name in the following table.
+:file_names 4;
+    "N/A";
+    "<interactive>";
+    "prac_t.v";
+    "prac.v";
