@@ -11,17 +11,25 @@ module HW7_1_t;
 	);
 	
 	initial	begin
-		clk = 0; rst_n = 0; in = 1;
+		clk = 0; rst_n = 0; in = 0;
 	end	
 
 	always #10
 		clk = ~clk;
+	
+	initial fork
+		#10 rst_n = 1;
+		#10 in = 1;
+		#30 in = 0;
+		#50 in = 0;
+		#70 in = 1;
+		#90 in = 0;
+	join
 
-	always #10
-		if( !rst_n )	rst_n = 1; 
-
-	always #20
+/*
+	always #30
 		in = ~in;
+*/
 	
 	initial	begin
 		$monitor($time, " --> in = %d, out = %d",in, out);

@@ -12,18 +12,14 @@ module HW7_1(
 	
 	always@(state, x_in)
 		case(state)
-			S0:	if(x_in)	next_state = S1; else	next_state = S0;
-			S1:	if(x_in)	next_state = S2; else	next_state = S1;
-			S2: if(x_in)	next_state = S3; else	next_state = S2;
-			S3: if(x_in)	next_state = S0; else	next_state = S3;
+			S0:	if(x_in)	next_state <= S1; else	next_state <= S0;
+			S1:	next_state <= S0;
 		endcase
 	
 	always@(state, x_in)
 		case(state)
-			S0:	out = 1;
-			S1: out = 2;
-			S2:	out = 3;
-			S3:	out = 0;
+			S0:	out = 0;
+			S1: if(!x_in) out = 1; else	out = 0;
 		endcase	
 
 endmodule 
