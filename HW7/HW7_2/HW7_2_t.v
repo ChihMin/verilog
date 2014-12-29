@@ -35,10 +35,12 @@ module HW7_2_t;
 			change5,
 			change10	
 	);
+	initial begin
+		$monitor($time, " ---> ava_water %d, ava_coke %d, ava_coffee %d; d_w %d, d_cok %d, d_cof %d; c5 %d, c10 %d",
+						available_water, available_coke, available_coffee,
+						drop_water, drop_coke, drop_coffee, change5, change10);
+	end
 
-	initial
-		$monitor($time, " ---> ava_water %d, ava_coke %d, ava_coffee %d",
-						available_water, available_coke, available_coffee);
 
 	initial	begin
 		clk = 0; rst_n = 0; coin5 = 0; coin10 = 0;
@@ -53,6 +55,9 @@ module HW7_2_t;
 	
 	initial fork
 		#10 coin5 = 1;	
+		#110 coin5 = 0;
+		#110 sel_water = 1;
+		#120 sel_water = 0;
 	join
 	
 	initial
