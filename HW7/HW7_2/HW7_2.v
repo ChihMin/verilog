@@ -79,7 +79,7 @@ module HW7_2(
 			
 			S4: //	20 dollars
 				if( coin5 || coin10 )	next_state <= S5;
-				else if( cancel )	next_state <= S2;
+				else if( cancel || sell_state)	next_state <= S2;
 				else if( sel_water ) begin
 					sell_state <= 1;
 					next_state <= S2;
@@ -93,7 +93,7 @@ module HW7_2(
 			
 			S5:	//	25 dollars
 				if( coin5 || coin10 )   next_state <= S5;
-				else if( cancel ) next_state <= S3;
+				else if( cancel || sell_state ) next_state <= S3;
 				else if( sel_water ) begin 
 					next_state <= S3; 
 					sell_state <= 1;
