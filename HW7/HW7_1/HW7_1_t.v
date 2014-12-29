@@ -7,7 +7,7 @@ module HW7_1_t;
 		.out(out),
 		.clk(clk),
 		.rst_n(rst_n),
-		.x_in(in)
+		.in(in)
 	);
 	
 	initial	begin
