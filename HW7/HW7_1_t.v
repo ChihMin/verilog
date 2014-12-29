@@ -1,6 +1,6 @@
 module HW7_1_t;
 
-	wire		[1:0]	out;
+	wire	out;
 	reg	clk, rst_n, in;
 
 	HW7_1 cmp(
@@ -25,11 +25,6 @@ module HW7_1_t;
 		#70 in = 1;
 		#90 in = 0;
 	join
-
-/*
-	always #30
-		in = ~in;
-*/
 	
 	initial	begin
 		$monitor($time, " --> in = %d, out = %d",in, out);

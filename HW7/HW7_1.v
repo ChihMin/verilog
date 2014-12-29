@@ -1,10 +1,10 @@
 module HW7_1(
-	output reg	[1:0]	out, 
+	output reg	out, 
 	input  clk, rst_n, x_in
 );
 
-	reg		[1:0]	state, next_state;
-	parameter		S0 = 2'd0, S1 = 2'd1, S2 = 2'd2, S3 = 2'd3; 
+	reg	state, next_state;
+	parameter	S0 = 1'b0, S1 = 1'b1; 
 	
 	always@(posedge clk, negedge rst_n)
 		if( !rst_n )	state <= 0;
