@@ -16,11 +16,13 @@ module HW7_2(
 				drop_coffee,
 				change5, 
 				change10,
+				water,
+				coke,
+				coffee,
 	output	reg [3:0]	debug
 );
 
 	reg			sell_state;
-	reg			water, coke, coffee;
 	reg	[4:0]	state, next_state, last_state;
 	parameter	S0 = 4'd0, S1 = 4'd1, S2 = 4'd2,
 				S3 = 4'd3, S4 = 4'd4, S5 = 4'd5,
@@ -69,6 +71,7 @@ module HW7_2(
 				if( coin5 )	next_state <= S3;
 				else if( coin10 ) next_state <= S4;
 				else if( cancel ) next_state <= S8;
+				else if( water ) next_state <= S6;
 				else if( sel_water ) begin 
 					next_state <= S6;
 					water <= 1;
@@ -78,6 +81,7 @@ module HW7_2(
 				if( coin5 )	next_state <= S4;
 				else if( coin10 )	next_state <= S5;
 				else if( cancel )	next_state <= S9;
+				else if( water || coke ) next_state <= S6;
 				else if( sel_water || sel_coke ) begin 
 					next_state <= S6; 
 					water <= sel_water;
@@ -88,6 +92,7 @@ module HW7_2(
 			S4: //	20 dollars
 				if( coin5 || coin10 )	next_state <= S5;
 				else if( cancel )	next_state <= S10;
+				else if( water || coke || coffee ) next_state <= S6;
 				else if( sel_water || sel_coke || sel_coffee ) begin
 					next_state <= S6;
 					water <= sel_water;
@@ -99,6 +104,7 @@ module HW7_2(
 			S5:	//	25 dollars
 				if( coin5 || coin10 )   next_state <= S5;
 				else if( cancel ) next_state <= S11;
+				else if( water || coke || coffee ) next_state <= S6;
 				else if( sel_water || sel_coffee || sel_coke ) begin 
 					next_state <= S6; 
 					water <= sel_water;
