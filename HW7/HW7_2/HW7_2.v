@@ -15,7 +15,8 @@ module HW7_2(
 				drop_coke, 
 				drop_coffee,
 				change5, 
-				change10
+				change10,
+	output	reg [2:0]	debug
 );
 
 	reg			sell_state;
@@ -44,6 +45,9 @@ module HW7_2(
 			change10 <= 0;
 		end
 		else	state = next_state;
+
+	always@(state)
+		debug <= state;
 	
 	always@(state, sell_state, coin5, coin10, sel_water, sel_coke, sel_coffee, cancel)
 		case(state)
