@@ -16,7 +16,7 @@ module HW7_2(
 				drop_coffee,
 				change5, 
 				change10,
-	output	reg [2:0]	debug
+	output	reg [3:0]	debug
 );
 
 	reg			sell_state;
@@ -52,9 +52,9 @@ module HW7_2(
 		case(state)
 			S0:	// 0 dollars
 				begin
-					water = 1;
-					coffee = 1;
-					coke = 1;
+					water = 0;
+					coffee = 0;
+					coke = 0;
 					if( coin5 )	next_state <= S1;
 					else if( coin10 ) next_state <= S2;
 					else	next_state <= S0;

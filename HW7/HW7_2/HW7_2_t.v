@@ -16,7 +16,7 @@ module HW7_2_t;
 			drop_coffee,
 			change5,
 			change10;	
-	wire	[2:0]	state;
+	wire	[3:0]	state;
 	
 	HW7_2 vending(
 			clk,
@@ -59,8 +59,7 @@ module HW7_2_t;
 	initial fork
 		#10 coin5 = 1;	
 		#110 coin5 = 0;
-		#110 sel_water = 1;
-		#120 sel_water = 0;
+		#110 sel_coke = 1;
 	join
 	
 	initial
