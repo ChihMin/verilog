@@ -15,7 +15,8 @@ module HW7_2(
 				drop_coke, 
 				drop_coffee,
 				change5, 
-				change10
+				change10,
+	output	reg	[2:0]	debug
 );
 
 	reg			sell_state;
@@ -122,6 +123,7 @@ module HW7_2(
 					drop_coffee = 0;	
 					change5 = 0;
 					change10 = 0; 
+					debug = S0;
 				end
 			S1:
 				begin
@@ -132,7 +134,8 @@ module HW7_2(
 					drop_coke = 0; 
 					drop_coffee = 0;	
 					change5 = 0;
-					change10 = 0; 
+					change10 = 0;
+					debug = S1; 
 					if( cancel || sell_state  )	change5 = 1;
 					else if( coin5 )	available_water = 1;
 					else if( coin10 )	begin
@@ -149,7 +152,8 @@ module HW7_2(
 					drop_coke = 0; 
 					drop_coffee = 0;	
 					change5 = 0;
-					change10 = 0; 
+					change10 = 0;
+					debug = S2; 
 					if( cancel || sell_state )	change10 = 1;
 					else if( coin5 )	available_coke = 1;
 					else if( coin10 )	begin	
@@ -170,8 +174,14 @@ module HW7_2(
 					drop_coke = 0; 
 					drop_coffee = 0;	
 					change5 = 0;
-					change10 = 0; 
-					if( cancel || sell_state ) change10 = 1;
+					change10 = 0;
+					debug = S3; 
+					if( cancel || sell_state ) begin 
+						change10 = 1;
+						available_water = 0;	
+						available_coke = 0;
+						available_coffee = 0;	
+					end
 					else if( coin5 || coin10 )	available_coffee = 1;		
 					else if( sel_water ) begin
 						available_water = 0;
@@ -194,7 +204,8 @@ module HW7_2(
 					drop_coke = 0; 
 					drop_coffee = 0;	
 					change5 = 0;
-					change10 = 0; 
+					change10 = 0;
+					debug = S4; 
 					if( cancel ) change10 = 1;		
 					else if( sel_water ) begin
 						available_water = 0;
@@ -224,7 +235,8 @@ module HW7_2(
 					drop_coke = 0; 
 					drop_coffee = 0;	
 					change5 = 0;
-					change10 = 0; 
+					change10 = 0;
+					debug = S5; 
 					if( cancel ) change10 = 1;		
 					else if( sel_water ) begin
 						available_water = 0;

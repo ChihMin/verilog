@@ -30,7 +30,7 @@ module HW7_1_t;
 		#130	in = 1;
 		#150	in = 0;
 		#170	in = 1;
-		#190	in = 0;
+		#300	in = 0;
 	join
 	
 	initial	begin
@@ -38,5 +38,5 @@ module HW7_1_t;
 	end
 
 	initial	
-		#300	$finish;
+		#400	$finish;
 endmodule

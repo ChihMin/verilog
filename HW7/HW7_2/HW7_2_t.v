@@ -15,7 +15,8 @@ module HW7_2_t;
 			drop_coke, 
 			drop_coffee,
 			change5,
-			change10;	
+			change10;
+	wire	[2:0]	state;
 
 	HW7_2 vending(
 			clk,
@@ -33,10 +34,12 @@ module HW7_2_t;
 			drop_coke, 
 			drop_coffee,
 			change5,
-			change10	
+			change10,
+			state 	
 	);
 	initial begin
-		$monitor($time, " ---> ava_water %d, ava_coke %d, ava_coffee %d; d_w %d, d_cok %d, d_cof %d; c5 %d, c10 %d",
+		$monitor($time, " ---> S%d : ava_water %d, ava_coke %d, ava_coffee %d; d_w %d, d_cok %d, d_cof %d; c5 %d, c10 %d",
+						state,
 						available_water, available_coke, available_coffee,
 						drop_water, drop_coke, drop_coffee, change5, change10);
 	end
