@@ -65,8 +65,8 @@ module HW7_2_t;
 	initial fork
 		#10 coin5 = 1;	
 		#70 coin5 = 0;
-		#90 cancel = 1;
-	//	#91 cancel = 0;
+		#70 cancel = 1;
+		#71 cancel = 0;
 		#150 cancel = 0;
 		#150 coin10 = 1;
 		#210 coin10 = 0;
