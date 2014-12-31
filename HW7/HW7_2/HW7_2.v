@@ -133,7 +133,7 @@ module HW7_2(
 			S9:		next_state <= S7;
 			S10:	next_state <= S8;
 			S11:	next_state <= S9;
-							
+			default: next_state <= 0; 			
 		endcase
 	
 
@@ -256,6 +256,17 @@ module HW7_2(
 					drop_coffee = 0;	
 					change5 = 0;
 					change10 = 1; 
+				end
+			default:
+				begin
+					available_water = 0;	
+					available_coke = 0;
+					available_coffee = 0;	
+					drop_water = 0;
+					drop_coke = 0; 
+					drop_coffee = 0;	
+					change5 = 0;
+					change10 = 0; 
 				end
 		endcase
 endmodule

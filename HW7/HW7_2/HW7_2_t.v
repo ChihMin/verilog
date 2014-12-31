@@ -44,7 +44,7 @@ module HW7_2_t;
 
 
 	initial	begin
-		clk = 0; rst_n = 0; coin5 = 0; coin10 = 0;
+		clk = 0; rst_n = 1; coin5 = 0; coin10 = 0;
 		sel_water = 0; sel_coke = 0; sel_coffee = 0;
 		cancel = 0;
 		
