@@ -64,14 +64,9 @@ module HW7_2_t;
 	
 	initial fork
 		#10 coin5 = 1;	
-		#70 coin5 = 0;
-		#70 cancel = 1;
-		#71 cancel = 0;
-		#150 cancel = 0;
-		#150 coin10 = 1;
-		#210 coin10 = 0;
-		#210 sel_coffee = 1;
-		#211 sel_coffee = 0;
+		#50 coin5 = 0;
+		#50 sel_coffee = 1;
+		#51 sel_coffee = 0;
 	join
 	
 	initial
