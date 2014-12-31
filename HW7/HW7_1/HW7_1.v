@@ -1,6 +1,6 @@
 module HW7_1(
-	output reg	out, 
-	input  clk, rst_n, in
+	input  clk, rst_n, in,
+	output reg	out 
 );
 
 	reg	state, next_state;
