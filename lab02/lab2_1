@@ -1,0 +1,120 @@
+#! /usr/local/Cellar/icarus-verilog/0.9.7/bin/vvp
+:ivl_version "0.9.7 " "(v0_9_7)";
+:vpi_time_precision - 12;
+:vpi_module "system";
+:vpi_module "v2005_math";
+:vpi_module "va_math";
+S_0x7fbcd3d07ed0 .scope module, "Lab2_1_t" "Lab2_1_t" 2 23;
+ .timescale -9 -12;
+v0x7fbcd3d1a9c0_0 .var "A", 1 0;
+v0x7fbcd3d1aa40_0 .net "A_eq_B", 0 0, L_0x7fbcd3d1b480; 1 drivers
+v0x7fbcd3d1aac0_0 .net "A_gt_B", 0 0, L_0x7fbcd3d1b230; 1 drivers
+v0x7fbcd3d1ab40_0 .net "A_lt_B", 0 0, L_0x7fbcd3d1aec0; 1 drivers
+v0x7fbcd3d1abc0_0 .var "B", 1 0;
+v0x7fbcd3d1ac40_0 .var "pass", 0 0;
+E_0x7fbcd3d08a50 .event edge, v0x7fbcd3d1abc0_0, v0x7fbcd3d1a9c0_0;
+L_0x7fbcd3d1b620 .part v0x7fbcd3d1a9c0_0, 1, 1;
+L_0x7fbcd3d1b730 .part v0x7fbcd3d1a9c0_0, 0, 1;
+L_0x7fbcd3d1b840 .part v0x7fbcd3d1abc0_0, 1, 1;
+L_0x7fbcd3d1b950 .part v0x7fbcd3d1abc0_0, 0, 1;
+S_0x7fbcd3d1a8e0 .scope task, "printerror" "printerror" 2 51, 2 51, S_0x7fbcd3d07ed0;
+ .timescale -9 -12;
+TD_Lab2_1_t.printerror ;
+    %set/v v0x7fbcd3d1ac40_0, 0, 1;
+    %vpi_call 2 54 "$display", "Error:\011 A1A0=%b\011 B1B0=%b\011 A_lt_B=%b\011 A_gt_B=%b\011 A_eq_B=%b", v0x7fbcd3d1a9c0_0, v0x7fbcd3d1abc0_0, v0x7fbcd3d1ab40_0, v0x7fbcd3d1aac0_0, v0x7fbcd3d1aa40_0;
+    %end;
+S_0x7fbcd3d07580 .scope module, "U1" "Lab2_1" 2 29, 3 1, S_0x7fbcd3d07ed0;
+ .timescale 0 0;
+v0x7fbcd3d08410_0 .net "A0", 0 0, L_0x7fbcd3d1b730; 1 drivers
+v0x7fbcd3d1a110_0 .net "A1", 0 0, L_0x7fbcd3d1b620; 1 drivers
+v0x7fbcd3d1a1a0_0 .alias "A_eq_B", 0 0, v0x7fbcd3d1aa40_0;
+v0x7fbcd3d1a220_0 .alias "A_gt_B", 0 0, v0x7fbcd3d1aac0_0;
+v0x7fbcd3d1a2b0_0 .alias "A_lt_B", 0 0, v0x7fbcd3d1ab40_0;
+v0x7fbcd3d1a370_0 .net "B0", 0 0, L_0x7fbcd3d1b950; 1 drivers
+v0x7fbcd3d1a400_0 .net "B1", 0 0, L_0x7fbcd3d1b840; 1 drivers
+v0x7fbcd3d1a4c0_0 .net *"_s0", 1 0, L_0x7fbcd3d1acc0; 1 drivers
+v0x7fbcd3d1a540_0 .net *"_s12", 1 0, L_0x7fbcd3d1b340; 1 drivers
+v0x7fbcd3d1a610_0 .net *"_s14", 1 0, L_0x7fbcd3d1b3d0; 1 drivers
+v0x7fbcd3d1a690_0 .net *"_s2", 1 0, L_0x7fbcd3d1adb0; 1 drivers
+v0x7fbcd3d1a770_0 .net *"_s6", 1 0, L_0x7fbcd3d1b010; 1 drivers
+v0x7fbcd3d1a7f0_0 .net *"_s8", 1 0, L_0x7fbcd3d1b120; 1 drivers
+L_0x7fbcd3d1acc0 .concat [ 1 1 0 0], L_0x7fbcd3d1b730, L_0x7fbcd3d1b620;
+L_0x7fbcd3d1adb0 .concat [ 1 1 0 0], L_0x7fbcd3d1b950, L_0x7fbcd3d1b840;
+L_0x7fbcd3d1aec0 .cmp/gt 2, L_0x7fbcd3d1adb0, L_0x7fbcd3d1acc0;
+L_0x7fbcd3d1b010 .concat [ 1 1 0 0], L_0x7fbcd3d1b730, L_0x7fbcd3d1b620;
+L_0x7fbcd3d1b120 .concat [ 1 1 0 0], L_0x7fbcd3d1b950, L_0x7fbcd3d1b840;
+L_0x7fbcd3d1b230 .cmp/gt 2, L_0x7fbcd3d1b010, L_0x7fbcd3d1b120;
+L_0x7fbcd3d1b340 .concat [ 1 1 0 0], L_0x7fbcd3d1b730, L_0x7fbcd3d1b620;
+L_0x7fbcd3d1b3d0 .concat [ 1 1 0 0], L_0x7fbcd3d1b950, L_0x7fbcd3d1b840;
+L_0x7fbcd3d1b480 .cmp/eq 2, L_0x7fbcd3d1b340, L_0x7fbcd3d1b3d0;
+    .scope S_0x7fbcd3d07ed0;
+T_1 ;
+    %set/v v0x7fbcd3d1ac40_0, 1, 1;
+    %set/v v0x7fbcd3d1a9c0_0, 0, 2;
+    %set/v v0x7fbcd3d1abc0_0, 0, 2;
+    %vpi_call 2 34 "$display", "Starting simulation";
+    %vpi_call 2 35 "$monitor", "%g\011 A1A0=%b\011 B1B0=%b\011 A_lt_B=%b\011 A_gt_B=%b\011 A_eq_B=%b", $time, v0x7fbcd3d1a9c0_0, v0x7fbcd3d1abc0_0, v0x7fbcd3d1ab40_0, v0x7fbcd3d1aac0_0, v0x7fbcd3d1aa40_0;
+    %delay 80000, 0;
+    %vpi_call 2 36 "$display", "%g Terminating simulation", $time;
+    %load/v 8, v0x7fbcd3d1ac40_0, 1;
+    %cmpi/u 8, 1, 1;
+    %jmp/0xz  T_1.0, 6;
+    %vpi_call 2 38 "$display", "[PASS]";
+T_1.0 ;
+    %vpi_call 2 39 "$finish";
+    %end;
+    .thread T_1;
+    .scope S_0x7fbcd3d07ed0;
+T_2 ;
+    %delay 20000, 0;
+    %load/v 8, v0x7fbcd3d1a9c0_0, 2;
+    %mov 10, 0, 30;
+    %addi 8, 1, 32;
+    %set/v v0x7fbcd3d1a9c0_0, 8, 2;
+    %jmp T_2;
+    .thread T_2;
+    .scope S_0x7fbcd3d07ed0;
+T_3 ;
+    %delay 5000, 0;
+    %load/v 8, v0x7fbcd3d1abc0_0, 2;
+    %mov 10, 0, 30;
+    %addi 8, 1, 32;
+    %set/v v0x7fbcd3d1abc0_0, 8, 2;
+    %jmp T_3;
+    .thread T_3;
+    .scope S_0x7fbcd3d07ed0;
+T_4 ;
+    %wait E_0x7fbcd3d08a50;
+    %delay 1000, 0;
+    %load/v 8, v0x7fbcd3d1aa40_0, 1;
+    %load/v 9, v0x7fbcd3d1aac0_0, 1;
+    %load/v 10, v0x7fbcd3d1ab40_0, 1;
+    %load/v 14, v0x7fbcd3d1a9c0_0, 2;
+    %load/v 16, v0x7fbcd3d1abc0_0, 2;
+    %cmp/u 14, 16, 2;
+    %mov 14, 4, 1;
+    %mov 11, 14, 1;
+    %load/v 14, v0x7fbcd3d1abc0_0, 2;
+    %load/v 16, v0x7fbcd3d1a9c0_0, 2;
+    %cmp/u 14, 16, 2;
+    %mov 14, 5, 1;
+    %mov 12, 14, 1;
+    %load/v 14, v0x7fbcd3d1a9c0_0, 2;
+    %load/v 16, v0x7fbcd3d1abc0_0, 2;
+    %cmp/u 14, 16, 2;
+    %mov 14, 5, 1;
+    %mov 13, 14, 1;
+    %cmp/u 8, 11, 3;
+    %inv 4, 1;
+    %jmp/0xz  T_4.0, 4;
+    %fork TD_Lab2_1_t.printerror, S_0x7fbcd3d1a8e0;
+    %join;
+T_4.0 ;
+    %jmp T_4;
+    .thread T_4, $push;
+# The file index is used to find the file name in the following table.
+:file_names 4;
+    "N/A";
+    "<interactive>";
+    "Lab2_1_t.v";
+    "Lab2_1.v";
