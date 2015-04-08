@@ -1,15 +1,14 @@
-module lab4_1(cout, mode, en, reset, clk, BCD0, BCD1, max, min, dir);
+module lab4_1(mode, en, reset, clk, BCD0, BCD1, max, min, dir);
 	input clk;
 	input reset;
 	input en;
 	input mode;
 	input dir;
 	output reg max, min;
-	output cout;
 	output 	reg [3:0]	BCD0;
 	output 	reg [3:0]	BCD1;
 	
-	wire	cout0;
+	wire	cout0, cout;
 	reg	reg_en = 1'b1;
 	reg	outputs0, outputs1;
 	wire	[3:0]	A, B;
@@ -61,9 +60,11 @@ module lab4_1(cout, mode, en, reset, clk, BCD0, BCD1, max, min, dir);
 		if( mode == 1'b0 ) begin
 			if(A == 4'd9 && B == 4'd5) begin
 				max = 1'b1;
+				min = 1'b0;
 			end
 			else if(A == 4'd1 && B == 4'd0) begin
 				min = 1'b1;
+				max = 1'b0;
 			end
 			else begin
 				max = 1'b0;
@@ -74,9 +75,11 @@ module lab4_1(cout, mode, en, reset, clk, BCD0, BCD1, max, min, dir);
 		else begin
 			if(A == 4'd8 && B == 4'd9) begin
 				max = 1'b1;
+				min = 1'b0;
 			end
 			else if(A == 4'd1 && B == 4'd0) begin
 				min = 1'b1;
+				max = 1'b0;
 			end
 			else begin
 				max = 1'b0;

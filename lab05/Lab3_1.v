@@ -24,7 +24,7 @@ always@* begin
 			cout = 0;
 		end
 		else begin 
-			outputs = inputs + 1;
+			outputs = inputs + 4'd1;
 			cout = 0;
 		end
 	end
@@ -39,7 +39,7 @@ always@* begin
 			cout = 0;
 		end
 		else  begin 
-			outputs = inputs - 1;
+			outputs = inputs - 4'd1;
 			cout = 0;
 		end
 	end

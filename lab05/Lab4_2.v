@@ -6,9 +6,10 @@ module Lab5(DIGIT, DISPLAY, max, min, clk, reset, en, speed, mode);
 	
 	wire tmp_max, tmp_min;	
 	wire de_reset, de_en;
-	wire div22, div24, div15, cout;
+	wire div22, div24, div15;
 	reg final_clk;
 	reg dir = 1'b1;
+	reg now_dir;
 	wire [3:0] BCD0, BCD1;
 	
 	clock_divider24 DIV1(.clk(clk), .clk_div(div22));
@@ -24,7 +25,6 @@ module Lab5(DIGIT, DISPLAY, max, min, clk, reset, en, speed, mode);
 								.clk(final_clk),
 								.BCD0(BCD0), 
 								.BCD1(BCD1), 
-								.cout(cout),
 								.max(tmp_max),
 								.min(tmp_min),
 								.dir(dir)
@@ -38,31 +38,40 @@ module Lab5(DIGIT, DISPLAY, max, min, clk, reset, en, speed, mode);
 	);
 	
 	
-	always@(speed) begin
+	always@(speed, div22, div24) begin
 		if(speed == 1'b1)
-			final_clk <= div22;
+			final_clk = div22;
 		else
-			final_clk <= div24;
+			final_clk = div24;
 	end
 	
-	always@(BCD0, BCD1, mode, tmp_max, tmp_min) begin
+	always@(BCD0, BCD1, mode, tmp_max, tmp_min, dir) begin
 		min = tmp_min;
 		max = tmp_max;
+		
 		if(mode == 1'b1)	begin
 			if(BCD0 == 4'd8 && BCD1 == 4'd9 && dir == 1'b1) begin
-				dir <= 1'b0;
+				dir = 1'b0;
 			end
 			else if(BCD0 == 4'd1 && BCD1 == 4'd0 && dir == 1'b0) begin
-				dir <= 1'b1;
+				dir = 1'b1;
 			end
+			else if(dir == 1'b1)
+				dir = 1'b1;
+			else
+				dir = 1'b0;
 		end
 		else	begin
 			if(BCD0 == 4'd9 && BCD1 == 4'd5 && dir == 1'b1) begin
-				dir <= 1'b0;
+				dir = 1'b0;
 			end
 			else if(BCD0 == 4'd1 && BCD1 == 4'd0 && dir == 1'b0) begin
-				dir <= 1'b1;
+				dir = 1'b1;
 			end
+			else if( dir == 1'b1 )
+				dir = 1'b1;
+			else
+				dir = 1'b0;
 		end
 	end
 	
