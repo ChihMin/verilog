@@ -2,8 +2,9 @@ module Lab5(DIGIT, DISPLAY, max, min, clk, reset, en, speed, mode);
 	input clk, reset, en, speed, mode;
 	output	[7:0]		DISPLAY;
 	output	[3:0]		DIGIT;
-	output max, min;
+	output reg max, min;
 	
+	wire tmp_max, tmp_min;	
 	wire de_reset, de_en;
 	wire div22, div24, div15, cout;
 	reg final_clk;
@@ -24,8 +25,8 @@ module Lab5(DIGIT, DISPLAY, max, min, clk, reset, en, speed, mode);
 								.BCD0(BCD0), 
 								.BCD1(BCD1), 
 								.cout(cout),
-								.max(max),
-								.min(min),
+								.max(tmp_max),
+								.min(tmp_min),
 								.dir(dir)
 	);
 	
@@ -44,33 +45,23 @@ module Lab5(DIGIT, DISPLAY, max, min, clk, reset, en, speed, mode);
 			final_clk <= div24;
 	end
 	
-	always@(BCD0, BCD1, mode) begin
+	always@(BCD0, BCD1, mode, tmp_max, tmp_min) begin
+		min = tmp_min;
+		max = tmp_max;
 		if(mode == 1'b1)	begin
 			if(BCD0 == 4'd8 && BCD1 == 4'd9 && dir == 1'b1) begin
 				dir <= 1'b0;
-				max = 1'b1;
 			end
 			else if(BCD0 == 4'd1 && BCD1 == 4'd0 && dir == 1'b0) begin
 				dir <= 1'b1;
-				min = 1'b1;
-			end
-			else begin
-				max = 1'b0;
-				min = 1'b0;
 			end
 		end
 		else	begin
 			if(BCD0 == 4'd9 && BCD1 == 4'd5 && dir == 1'b1) begin
 				dir <= 1'b0;
-				max = 1'b1;
 			end
 			else if(BCD0 == 4'd1 && BCD1 == 4'd0 && dir == 1'b0) begin
 				dir <= 1'b1;
-				min = 1'b1;
-			end
-			else begin
-				max = 1'b0;
-				min = 1'b0;
 			end
 		end
 	end

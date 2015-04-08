@@ -3,6 +3,7 @@ module lab4_1(cout, mode, en, reset, clk, BCD0, BCD1, max, min, dir);
 	input reset;
 	input en;
 	input mode;
+	input dir;
 	output reg max, min;
 	output cout;
 	output 	reg [3:0]	BCD0;
