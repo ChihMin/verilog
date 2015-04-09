@@ -50,10 +50,10 @@ module Lab5(DIGIT, DISPLAY, max, min, clk, reset, en, speed, mode);
 		max = tmp_max;
 		
 		if(mode == 1'b1)	begin
-			if(BCD0 == 4'd8 && BCD1 == 4'd9 && dir == 1'b1) begin
+			if(BCD0 == 4'd9 && BCD1 == 4'd9 && dir == 1'b1) begin
 				dir = 1'b0;
 			end
-			else if(BCD0 == 4'd1 && BCD1 == 4'd0 && dir == 1'b0) begin
+			else if(BCD0 == 4'd0 && BCD1 == 4'd0 && dir == 1'b0) begin
 				dir = 1'b1;
 			end
 			else if(dir == 1'b1)
@@ -62,10 +62,10 @@ module Lab5(DIGIT, DISPLAY, max, min, clk, reset, en, speed, mode);
 				dir = 1'b0;
 		end
 		else	begin
-			if(BCD0 == 4'd9 && BCD1 == 4'd5 && dir == 1'b1) begin
+			if(BCD0 == 4'd0 && BCD1 == 4'd6 && dir == 1'b1) begin
 				dir = 1'b0;
 			end
-			else if(BCD0 == 4'd1 && BCD1 == 4'd0 && dir == 1'b0) begin
+			else if(BCD0 == 4'd0 && BCD1 == 4'd0 && dir == 1'b0) begin
 				dir = 1'b1;
 			end
 			else if( dir == 1'b1 )
