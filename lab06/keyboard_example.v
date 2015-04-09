@@ -12,7 +12,7 @@ reg [3:0] DECODE_BCD;
 reg [3:0] KEY_CODE;
 reg [3:0] ENABLE;
 reg [7:0] SEGMENT;
-reg [11:0] KEY_BUFFER;
+reg [15:0] KEY_BUFFER;
 reg [14:1] DIVIDER;
 reg PRESS;
 wire PRESS_VALID;
@@ -65,7 +65,7 @@ always @(SCAN_CODE,COLUMN)
 	end
 
 /********************
-* Debounce Circuit *
+* Debounce Circuit *****************************************************************
 ********************/
 always @(posedge DEBOUNCE_CLK or negedge RESET)
 	begin
@@ -80,11 +80,11 @@ always @(posedge DEBOUNCE_CLK or negedge RESET)
 assign PRESS_VALID = (DEBOUNCE_COUNT == 4'hD) ?1'b1 : 1'b0;
 
 /******************
-* Fetch Key Code *
+* Fetch Key Code *********************************************************************
 ******************/
 always @(negedge DEBOUNCE_CLK or negedge RESET)
 	begin
-		if (!RESET)	
+		if (!RESET)
 			KEY_CODE <= 4'hC;
 		else if (PRESS_VALID)	
 			KEY_CODE <= SCAN_CODE;
@@ -93,26 +93,48 @@ always @(negedge DEBOUNCE_CLK or negedge RESET)
 /*******************************
 * Convert Key Code Into ASCII *
 *******************************/
-always @(KEY_CODE)
+always @(negedge PRESS_VALID, negedge RESET)
 	begin
-		case (KEY_CODE)
-			4'hC : KEY_BUFFER = 12'h030; // 0
-			4'hD : KEY_BUFFER = 12'h131; // 1
-			4'h9 : KEY_BUFFER = 12'h232; // 2
-			4'h5 : KEY_BUFFER = 12'h333; // 3
-			4'hE : KEY_BUFFER = 12'h434; // 4
-			4'hA : KEY_BUFFER = 12'h535; // 5
-			4'h6 : KEY_BUFFER = 12'h636; // 6
-			4'hF : KEY_BUFFER = 12'h737; // 7
-			4'hB : KEY_BUFFER = 12'h838; // 8
-			4'h7 : KEY_BUFFER = 12'h939; // 9
-			4'h8 : KEY_BUFFER = 12'hA41; // A
-			4'h4 : KEY_BUFFER = 12'hB42; // B
-			4'h3 : KEY_BUFFER = 12'hC43; // C
-			4'h2 : KEY_BUFFER = 12'hD44; // D
-			4'h1 : KEY_BUFFER = 12'hE45; // E
-			4'h0 : KEY_BUFFER = 12'hF46; // F
-		endcase
+		if(!RESET)
+			KEY_BUFFER = 16'h0000;
+		else	begin
+			case (KEY_CODE)
+				4'hC : KEY_BUFFER = (KEY_BUFFER << 4) | 16'h0000;
+				4'hD : KEY_BUFFER = (KEY_BUFFER << 4) | 16'h0001;
+				4'h9 : KEY_BUFFER = (KEY_BUFFER << 4) | 16'h0002;
+				4'h5 : KEY_BUFFER = (KEY_BUFFER << 4) | 16'h0003; // 3
+				4'hE : KEY_BUFFER = (KEY_BUFFER << 4) | 16'h0004; // 4
+				4'hA : KEY_BUFFER = (KEY_BUFFER << 4) | 16'h0005; // 5
+				4'h6 : KEY_BUFFER = (KEY_BUFFER << 4) | 16'h0006; // 6
+				4'hF : KEY_BUFFER = (KEY_BUFFER << 4) | 16'h0007; // 7
+				4'hB : KEY_BUFFER = (KEY_BUFFER << 4) | 16'h0008; // 8
+				4'h7 : KEY_BUFFER = (KEY_BUFFER << 4) | 16'h0009;// 9
+				4'h8 : KEY_BUFFER = (KEY_BUFFER << 4) | 16'h000A; // A
+				4'h4 : KEY_BUFFER = (KEY_BUFFER << 4) | 16'h000B; // B
+				4'h3 : KEY_BUFFER = (KEY_BUFFER << 4) | 16'h000C; // C
+				4'h2 : KEY_BUFFER = (KEY_BUFFER << 4) | 16'h000D; // D
+				4'h1 : KEY_BUFFER = (KEY_BUFFER << 4) | 16'h000E; // E
+				4'h0 : KEY_BUFFER = (KEY_BUFFER << 4) | 16'h000F; // F
+		/*
+				4'hC : KEY_BUFFER = 16'h0030; // 0
+				4'hD : KEY_BUFFER = 16'h1131; // 1
+				4'h9 : KEY_BUFFER = 16'h2232; // 2
+				4'h5 : KEY_BUFFER = 16'h3333; // 3
+				4'hE : KEY_BUFFER = 16'h4434; // 4
+				4'hA : KEY_BUFFER = 16'h5535; // 5
+				4'h6 : KEY_BUFFER = 16'h6636; // 6
+				4'hF : KEY_BUFFER = 16'h7737; // 7
+				4'hB : KEY_BUFFER = 16'h8838; // 8
+				4'h7 : KEY_BUFFER = 16'h9939; // 9
+				4'h8 : KEY_BUFFER = 16'hAA41; // A
+				4'h4 : KEY_BUFFER = 16'hBB42; // B
+				4'h3 : KEY_BUFFER = 16'hCC43; // C
+				4'h2 : KEY_BUFFER = 16'hDD44; // D
+				4'h1 : KEY_BUFFER = 16'hEE45; // E
+				4'h0 : KEY_BUFFER = 16'hFF46; // F
+		*/	
+			endcase
+		end
 	end
 
 /***************************
@@ -120,10 +142,11 @@ always @(KEY_CODE)
 ***************************/
 always @(negedge SCAN_CLK or negedge RESET)
 	begin
-		if (!RESET)
-			ENABLE <= 4'b0111;
+		if (!RESET) begin
+			ENABLE <= 4'b1110;	
+		end
 		else
-			ENABLE <= {ENABLE[1],1'b1,ENABLE[0],ENABLE[3]};
+			ENABLE <= {ENABLE[0],ENABLE[3],ENABLE[2],ENABLE[1]};
 	end
 
 /****************************
@@ -134,7 +157,8 @@ always @(ENABLE or KEY_BUFFER)
 		case (ENABLE)
 			4'b1110:DECODE_BCD = KEY_BUFFER[3:0];
 			4'b1101:DECODE_BCD = KEY_BUFFER[7:4];
-			4'b0111:DECODE_BCD = KEY_BUFFER[11:8];
+			4'b1011:DECODE_BCD = KEY_BUFFER[11:8];
+			4'b0111:DECODE_BCD = KEY_BUFFER[15:12];
 		endcase
 	end
 
