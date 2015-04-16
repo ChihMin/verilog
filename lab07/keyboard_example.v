@@ -1,21 +1,31 @@
-module KEYBOARD_EXAMPLE (CLK, RESET,COLUMN, ROW, ENABLE, SEGMENT);
+module KEYBOARD_EXAMPLE (CLK, RESET,COLUMN, ROW, ENABLE, SEGMENT, ADD, SUB);
+input ADD, SUB;
 input CLK;
 input RESET;
 input [3:0] COLUMN;
 output [3:0] ROW;
 output [3:0] ENABLE;
-output [7:0] SEGMENT;
+output [8:0] SEGMENT;
+
 reg [3:0] ROW;
 reg [3:0] DEBOUNCE_COUNT;
+reg [3:0] DEBOUNCE_COUNT1;
+reg [3:0] DEBOUNCE_COUNT2;
 reg [3:0] SCAN_CODE;
 reg [3:0] DECODE_BCD;
 reg [3:0] KEY_CODE;
 reg [3:0] ENABLE;
-reg [7:0] SEGMENT;
+reg [8:0] SEGMENT;
 reg [15:0] KEY_BUFFER;
+reg [15:0] OUTPUT_TEMP = 16'h1200;
 reg [14:1] DIVIDER;
+reg [3:0] A, B;
+reg [4:0] ANS;
+reg FIRST = 1'b0;
 reg PRESS;
 wire PRESS_VALID;
+wire ADD_VALID;
+wire SUB_VALID;
 wire DEBOUNCE_CLK;
 wire SCAN_CLK;
 
@@ -76,9 +86,30 @@ always @(posedge DEBOUNCE_CLK or negedge RESET)
 		else if (DEBOUNCE_COUNT <= 4'hE)
 			DEBOUNCE_COUNT <= DEBOUNCE_COUNT + 1;
 	end
+	
+always @(posedge DEBOUNCE_CLK or negedge RESET)
+	begin
+		if (!RESET)
+			DEBOUNCE_COUNT1 <= 4'h0;
+		else if (ADD)
+			DEBOUNCE_COUNT1 <= 4'h0;
+		else if (DEBOUNCE_COUNT1 <= 4'hE)
+			DEBOUNCE_COUNT1 <= DEBOUNCE_COUNT1 + 1;
+	end
+	
+always @(posedge DEBOUNCE_CLK or negedge RESET)
+	begin
+		if (!RESET)
+			DEBOUNCE_COUNT2 <= 4'h0;
+		else if (SUB)
+			DEBOUNCE_COUNT2 <= 4'h0;
+		else if (DEBOUNCE_COUNT2 <= 4'hE)
+			DEBOUNCE_COUNT2 <= DEBOUNCE_COUNT2 + 1;
+	end
 
 assign PRESS_VALID = (DEBOUNCE_COUNT == 4'hD) ?1'b1 : 1'b0;
-
+assign ADD_VALID = (DEBOUNCE_COUNT1 == 4'hD) ? 1'b1 : 1'b0;
+assign SUB_VALID = (DEBOUNCE_COUNT2 == 4'hD) ? 1'b1 : 1'b0;
 /******************
 * Fetch Key Code *********************************************************************
 ******************/
@@ -93,49 +124,61 @@ always @(negedge DEBOUNCE_CLK or negedge RESET)
 /*******************************
 * Convert Key Code Into ASCII *
 *******************************/
-always @(negedge PRESS_VALID, negedge RESET)
+always@(negedge PRESS_VALID, negedge RESET)
 	begin
-		if(!RESET)
-			KEY_BUFFER = 16'h0000;
-		else	begin
-			case (KEY_CODE)
-				4'hC : KEY_BUFFER = (KEY_BUFFER << 4) | 16'h0000;
-				4'hD : KEY_BUFFER = (KEY_BUFFER << 4) | 16'h0001;
-				4'h9 : KEY_BUFFER = (KEY_BUFFER << 4) | 16'h0002;
-				4'h5 : KEY_BUFFER = (KEY_BUFFER << 4) | 16'h0003; // 3
-				4'hE : KEY_BUFFER = (KEY_BUFFER << 4) | 16'h0004; // 4
-				4'hA : KEY_BUFFER = (KEY_BUFFER << 4) | 16'h0005; // 5
-				4'h6 : KEY_BUFFER = (KEY_BUFFER << 4) | 16'h0006; // 6
-				4'hF : KEY_BUFFER = (KEY_BUFFER << 4) | 16'h0007; // 7
-				4'hB : KEY_BUFFER = (KEY_BUFFER << 4) | 16'h0008; // 8
-				4'h7 : KEY_BUFFER = (KEY_BUFFER << 4) | 16'h0009;// 9
-				4'h8 : KEY_BUFFER = (KEY_BUFFER << 4) | 16'h000A; // A
-				4'h4 : KEY_BUFFER = (KEY_BUFFER << 4) | 16'h000B; // B
-				4'h3 : KEY_BUFFER = (KEY_BUFFER << 4) | 16'h000C; // C
-				4'h2 : KEY_BUFFER = (KEY_BUFFER << 4) | 16'h000D; // D
-				4'h1 : KEY_BUFFER = (KEY_BUFFER << 4) | 16'h000E; // E
-				4'h0 : KEY_BUFFER = (KEY_BUFFER << 4) | 16'h000F; // F
-		/*
-				4'hC : KEY_BUFFER = 16'h0030; // 0
-				4'hD : KEY_BUFFER = 16'h1131; // 1
-				4'h9 : KEY_BUFFER = 16'h2232; // 2
-				4'h5 : KEY_BUFFER = 16'h3333; // 3
-				4'hE : KEY_BUFFER = 16'h4434; // 4
-				4'hA : KEY_BUFFER = 16'h5535; // 5
-				4'h6 : KEY_BUFFER = 16'h6636; // 6
-				4'hF : KEY_BUFFER = 16'h7737; // 7
-				4'hB : KEY_BUFFER = 16'h8838; // 8
-				4'h7 : KEY_BUFFER = 16'h9939; // 9
-				4'h8 : KEY_BUFFER = 16'hAA41; // A
-				4'h4 : KEY_BUFFER = 16'hBB42; // B
-				4'h3 : KEY_BUFFER = 16'hCC43; // C
-				4'h2 : KEY_BUFFER = 16'hDD44; // D
-				4'h1 : KEY_BUFFER = 16'hEE45; // E
-				4'h0 : KEY_BUFFER = 16'hFF46; // F
-		*/	
-			endcase
+		if(!RESET) begin
+			FIRST = 1'b0;
+		end
+		else begin
+			FIRST = 1'b1 - FIRST;
 		end
 	end
+
+
+always@( negedge RESET, negedge PRESS_VALID, posedge ADD_VALID, posedge SUB_VALID)
+	begin
+		if(!RESET) begin
+			OUTPUT_TEMP = 16'd0;
+			KEY_BUFFER = 16'd0;
+		end
+	
+		else if(ADD_VALID == 1) begin
+			A = (OUTPUT_TEMP & 16'hF000) >> 12;
+			B = (OUTPUT_TEMP & 16'h0F00) >> 8;
+			ANS = A + B;
+			
+			KEY_BUFFER = OUTPUT_TEMP | ANS;
+		end
+		else if(SUB_VALID == 1)begin
+			A = (OUTPUT_TEMP & 16'hF000) >> 12;
+			B = (OUTPUT_TEMP & 16'h0F00) >> 8;
+			ANS = A - B;
+			KEY_BUFFER = OUTPUT_TEMP | ANS;
+		end
+	
+		else	begin
+			case (KEY_CODE)
+				4'hC : OUTPUT_TEMP = FIRST ? OUTPUT_TEMP | 16'h0000 : 16'h0000;
+				4'hD : OUTPUT_TEMP = FIRST ? OUTPUT_TEMP | 16'h0100 : 16'h1000;
+				4'h9 : OUTPUT_TEMP = FIRST ? OUTPUT_TEMP | 16'h0200 : 16'h2000;
+				4'h5 : OUTPUT_TEMP = FIRST ? OUTPUT_TEMP | 16'h0300 : 16'h3000;// 3
+				4'hE : OUTPUT_TEMP = FIRST ? OUTPUT_TEMP | 16'h0400 : 16'h4000;// 4
+				4'hA : OUTPUT_TEMP = FIRST ? OUTPUT_TEMP | 16'h0500 : 16'h5000;// 5
+				4'h6 : OUTPUT_TEMP = FIRST ? OUTPUT_TEMP | 16'h0600 : 16'h6000;// 6
+				4'hF : OUTPUT_TEMP = FIRST ? OUTPUT_TEMP | 16'h0700 : 16'h7000;// 7
+				4'hB : OUTPUT_TEMP = FIRST ? OUTPUT_TEMP | 16'h0800 : 16'h8000;// 8
+				4'h7 : OUTPUT_TEMP = FIRST ? OUTPUT_TEMP | 16'h0900 : 16'h9000;// 9
+				4'h8 : OUTPUT_TEMP = FIRST ? OUTPUT_TEMP | 16'h0A00 : 16'hA000;// A
+				4'h4 : OUTPUT_TEMP = FIRST ? OUTPUT_TEMP | 16'h0B00 : 16'hB000;// B
+				4'h3 : OUTPUT_TEMP = FIRST ? OUTPUT_TEMP | 16'h0C00 : 16'hC000;// C
+				4'h2 : OUTPUT_TEMP = FIRST ? OUTPUT_TEMP | 16'h0D00 : 16'hD000;// D
+				4'h1 : OUTPUT_TEMP = FIRST ? OUTPUT_TEMP | 16'h0E00 : 16'hE000;// E
+				4'h0 : OUTPUT_TEMP = FIRST ? OUTPUT_TEMP | 16'h0F00 : 16'hF000;// F
+			endcase
+			KEY_BUFFER = OUTPUT_TEMP;
+		end
+	end
+
 
 /***************************
 * Enable Display Location *
@@ -168,22 +211,22 @@ always @(ENABLE or KEY_BUFFER)
 always @(DECODE_BCD)
 	begin
 		case (DECODE_BCD)
-			4'h0 : SEGMENT = 8'b00000011;// 0
-			4'h1 : SEGMENT = 8'b10011111;//1
-			4'h2 : SEGMENT = 8'b00100100;//2
-			4'h3 : SEGMENT = 8'b00001100;//3
-			4'h4 : SEGMENT = 8'b10011000;//4
-			4'h5 : SEGMENT = 8'b01001000;//5
-			4'h6 : SEGMENT = 8'b01000000;//6
-			4'h7 : SEGMENT = 8'b00011111;//7
-			4'h8 : SEGMENT = 8'b00000000;//8
-			4'h9 : SEGMENT = 8'b00011000;//9
-			4'hA : SEGMENT = 8'b00010000;//A
-			4'hB : SEGMENT = 8'b11000000;//B
-			4'hC : SEGMENT = 8'b01100011;//C
-			4'hD : SEGMENT = 8'b10000100;//D
-			4'hE : SEGMENT = 8'b01100000;//E
-			4'hF : SEGMENT = 8'b01110000;//F
+			4'h0 : SEGMENT = 9'b100000011;// 0
+			4'h1 : SEGMENT = 9'b110011111;//1
+			4'h2 : SEGMENT = 9'b100100100;//2
+			4'h3 : SEGMENT = 9'b100001100;//3
+			4'h4 : SEGMENT = 9'b110011000;//4
+			4'h5 : SEGMENT = 9'b101001000;//5
+			4'h6 : SEGMENT = 9'b101000000;//6
+			4'h7 : SEGMENT = 9'b100011111;//7
+			4'h8 : SEGMENT = 9'b000000000;//-8
+			4'h9 : SEGMENT = 9'b000011111;//-7
+			4'hA : SEGMENT = 9'b001000000;//-6
+			4'hB : SEGMENT = 9'b001001000;//-5
+			4'hC : SEGMENT = 9'b010011000;//-4
+			4'hD : SEGMENT = 9'b000001100;//-3
+			4'hE : SEGMENT = 9'b000100100;//-2
+			4'hF : SEGMENT = 9'b010011111;//-1
 		endcase
 	end
 endmodule 
