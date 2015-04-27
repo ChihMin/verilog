@@ -363,14 +363,14 @@ always @(negedge LCD_CLK or negedge RESET) begin
 			X_PAGE <= 3'o3; 
 			CLEAR <= 1'b0; end
 		end
-		else if((X_PAGE == 3'o3) || (x_PAGE == 3'o4)) begin
+		else if((X_PAGE == 3'o3) || (X_PAGE == 3'o4)) begin
 			if(INDEX < 128) begin
 				LCD_DI <= 1'b1;
 				if(X_PAGE == 3'o3)
 					LCD_DATA <= UPPER_PATTERN;
 				else
 					LCD_DATA <= LOWER_PATTERN;
-				if(INDEx < 64)
+				if(INDEX < 64)
 					LCD_SEL <= 2'b01;
 				else
 					LCD_SEL <= 2'b10;
