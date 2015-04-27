@@ -1,14 +1,23 @@
-module LCD_Control (CLK, RESET, LCD_ENABLE, LCD_RW, LCD_DI, LCD_CS1, LCD_CS2, LCD_RST,LCD_DATA);
+module LCD_Control(CLK, RESET, LCD_ENABLE, LCD_RW, LCD_DI, LCD_CS1, LCD_CS2, LCD_RST,LCD_DATA);
 input CLK;
 input RESET;
-output LCD_ENABLE; output LCD_RW;
+output LCD_ENABLE; 
+output LCD_RW;
 output LCD_DI;
-output LCD_CS1; output LCD_CS2; output LCD_RST; output [7:0] LCD_DATA;
+output LCD_CS1; 
+output LCD_CS2; 
+output LCD_RST; 
+output [7:0] LCD_DATA;
+reg [5:0] START_LINE = 6'd0;
+reg [5:0] NEXT_LINE = 6'd0;
 reg [7:0] LCD_DATA;
-reg [7:0] UPPER_PATTERN; reg [7:0] LOWER_PATTERN; reg [1:0] LCD_SEL;
+reg [7:0] UPPER_PATTERN; 
+reg [7:0] LOWER_PATTERN; 
+reg [1:0] LCD_SEL;
 reg [2:0] STATE; 
 reg [2:0] X_PAGE; 
 reg [8:1] DIVIDER; 
+reg [22:1] LCD_DIVIDER; 
 reg [1:0] DELAY; 
 reg [7:0] INDEX; 
 reg [1:0] ENABLE; 
@@ -16,9 +25,13 @@ reg CLEAR;
 reg LCD_RW;
 reg LCD_DI;
 reg LCD_RST;
-wire LCD_CLK; wire LCD_CS1;
+reg FLAG = 1'b0;
+wire LCD_CLK; 
+wire LCD_RESET;
+wire LCD_CS1;
 wire LCD_CS2;
 wire LCD_ENABLE;
+
 
 /*********************** * Clock Divider * ***********************/
 always @(posedge CLK or negedge RESET)
@@ -29,6 +42,15 @@ always @(posedge CLK or negedge RESET)
 			DIVIDER <= DIVIDER + 1;
 	end
 assign LCD_CLK = DIVIDER[8];
+
+always @(posedge CLK or negedge RESET)
+	begin
+		if (!RESET)
+			LCD_DIVIDER <= 22'h00;
+		else
+			LCD_DIVIDER <= LCD_DIVIDER + 1;
+	end
+assign LCD_RESET = LCD_DIVIDER[22];  
 
 /*********************** * Display Patterns * ***********************/
 always @(INDEX) begin
@@ -306,10 +328,33 @@ always @(INDEX) begin
 		8'h7F : LOWER_PATTERN = 8'h00;
 	endcase	
 end
-
-/****************************** * Initialize and Write LCD Data * ******************************/
+/*
 always @(negedge LCD_CLK or negedge RESET) begin
 	if (!RESET) begin
+		if( !FLAG ) begin
+			NEXT_LINE = NEXT_LINE + 6'd1;
+			FLAG = 1'b1;
+		end
+		else
+			NEXT_LINE = NEXT_LINE;
+	end
+	else begin
+			NEXT_LINE = NEXT_LINE;
+			FLAG = 1'b0;
+	end
+end
+	*/
+
+always @(negedge LCD_RESET or negedge RESET) begin
+	if(!RESET)
+		NEXT_LINE = 6'd0;
+	else
+		NEXT_LINE = NEXT_LINE + 6'd1;
+end
+
+/****************************** * Initialize and Write LCD Data * ******************************/
+always @(posedge LCD_CLK or negedge LCD_RESET) begin
+	if (!LCD_RESET) begin
 		CLEAR <= 1'b1; 
 		STATE <= 3'b0; 
 		DELAY <= 2'b00;
@@ -320,8 +365,10 @@ always @(negedge LCD_CLK or negedge RESET) begin
 		LCD_SEL<= 2'b11;
 		LCD_DI <= 1'b0; 
 		LCD_RW <= 1'b0;
+		START_LINE = NEXT_LINE;
 	end
 	else begin
+		FLAG = 1'b0;
 		if (ENABLE < 2'b10) begin
 			ENABLE <= ENABLE + 1;
 			DELAY[1]<= 1'b1;
@@ -336,7 +383,7 @@ always @(negedge LCD_CLK or negedge RESET) begin
 		end
 		else if (STATE == 3'o1) begin
 			STATE <= 3'o2;
-			LCD_DATA<= {2'b11,6'b000000}; 
+			LCD_DATA<= {2'b11,START_LINE}; 
 			ENABLE <= 2'b00;
 		end
 		else if (STATE == 3'o2) begin
@@ -394,6 +441,6 @@ end
 
 assign LCD_ENABLE = ENABLE[0];
 assign LCD_CS1 = LCD_SEL[0];
-assign LCD_CS2 = LCS_SEL[1];
+assign LCD_CS2 = LCD_SEL[1];
 
 endmodule
