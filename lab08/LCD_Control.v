@@ -352,36 +352,40 @@ always @(negedge LCD_CLK or negedge RESET) begin
 		end
 		else if (STATE == 3'o4) begin
 			if (CLEAR) begin
-			if (INDEX < 64) begin
-			INDEX = INDEX + 1; LCD_DI <= 1'b1; LCD_DATA<= 8'h00; ENABLE <= 2'b00; end
-		else if (X_PAGE < 3'o7) begin
-			STATE <= 3'o3;
-			X_PAGE <= X_PAGE + 1; 
-		end
-		else begin
-			STATE <= 3'o3; 
-			X_PAGE <= 3'o3; 
-			CLEAR <= 1'b0; end
-		end
-		else if((X_PAGE == 3'o3) || (X_PAGE == 3'o4)) begin
-			if(INDEX < 128) begin
-				LCD_DI <= 1'b1;
-				if(X_PAGE == 3'o3)
-					LCD_DATA <= UPPER_PATTERN;
-				else
-					LCD_DATA <= LOWER_PATTERN;
-				if(INDEX < 64)
-					LCD_SEL <= 2'b01;
-				else
-					LCD_SEL <= 2'b10;
-				INDEX = INDEX + 1;
-				ENABLE <= 2'b00;
-			end
-			else
-				begin
-					LCD_SEL <= 2'b11;
+				if (INDEX < 64) begin
+					INDEX = INDEX + 1; 
+					LCD_DI <= 1'b1; 
+					LCD_DATA<= 8'h00; 
+					ENABLE <= 2'b00; 
+				end
+				else if (X_PAGE < 3'o7) begin
 					STATE <= 3'o3;
-					X_PAGE <= X_PAGE + 1;
+					X_PAGE <= X_PAGE + 1; 
+				end
+				else begin
+					STATE <= 3'o3; 
+					X_PAGE <= 3'o3; 
+					CLEAR <= 1'b0; 
+				end
+			end
+			else if((X_PAGE == 3'o3) || (X_PAGE == 3'o4)) begin
+				if(INDEX < 128) begin
+					LCD_DI <= 1'b1;
+					if(X_PAGE == 3'o3)
+						LCD_DATA <= UPPER_PATTERN;
+					else
+						LCD_DATA <= LOWER_PATTERN;
+					if(INDEX < 64)
+						LCD_SEL <= 2'b01;
+					else
+						LCD_SEL <= 2'b10;
+					INDEX = INDEX + 1;
+					ENABLE <= 2'b00;
+				end
+				else begin
+						LCD_SEL <= 2'b11;
+						STATE <= 3'o3;
+						X_PAGE <= X_PAGE + 1;
 				end
 			end
 		end
