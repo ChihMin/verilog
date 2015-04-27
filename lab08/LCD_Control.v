@@ -1,0 +1,171 @@
+module LCD_Control (CLK, RESET, LCD_ENABLE, LCD_RW, LCD_DI, LCD_CS1, LCD_CS2, LCD_RST,LCD_DATA);
+input CLK;
+input RESET;
+output LCD_ENABLE; output LCD_RW;
+output LCD_DI;
+output LCD_CS1; output LCD_CS2; output LCD_RST; output [7:0] LCD_DATA;
+reg [7:0] LCD_DATA;
+reg [7:0] UPPER_PATTERN; reg [7:0] LOWER_PATTERN; reg [1:0] LCD_SEL;
+reg [2:0] STATE; 
+reg [2:0] X_PAGE; 
+reg [8:1] DIVIDER; 
+reg [1:0] DELAY; 
+reg [7:0] INDEX; 
+reg [1:0] ENABLE; 
+reg CLEAR;
+reg LCD_RW;
+reg LCD_DI;
+reg LCD_RST;
+wire LCD_CLK; wire LCD_CS1;
+wire LCD_CS2;
+wire LCD_ENABLE;
+
+/*********************** * Clock Divider * ***********************/
+always @(posedge CLK or negedge RESET)
+	begin
+		if (!RESET)
+			DIVIDER <= 8'h00;
+		else
+			DIVIDER <= DIVIDER + 1;
+	end
+assign LCD_CLK = DIVIDER[8];
+
+/*********************** * Display Patterns * ***********************/
+always @(INDEX) begin
+	case (INDEX)
+		8'h00 : UPPER_PATTERN = 8'h00; //SPACE 8'h01 : UPPER_PATTERN = 8'h00;
+		8'h02 : UPPER_PATTERN = 8'h00;
+		8'h03 : UPPER_PATTERN = 8'h00;
+		8'h04 : UPPER_PATTERN = 8'h00;
+		8'h05 : UPPER_PATTERN = 8'h00;
+		8'h06 : UPPER_PATTERN = 8'h00;
+		8'h07 : UPPER_PATTERN = 8'h00;
+		8'h08 : UPPER_PATTERN = 8'h00; // SPACE 8'h09 : UPPER_PATTERN = 8'h00;
+		8'h0A : UPPER_PATTERN = 8'h00;
+		8'h0B : UPPER_PATTERN = 8'h00;
+		8'h0C : UPPER_PATTERN = 8'h00;
+		8'h0D : UPPER_PATTERN = 8'h00;
+		8'h0E : UPPER_PATTERN = 8'h00;
+		8'h0F : UPPER_PATTERN = 8'h00;
+
+		8'h10 : UPPER_PATTERN = 8'h00; // SPACE 
+		8'h11 : UPPER_PATTERN = 8'h00;
+		8'h12 : UPPER_PATTERN = 8'h00;
+		8'h13 : UPPER_PATTERN = 8'h00;
+		8'h14 : UPPER_PATTERN = 8'h00; 
+		8'h15 : UPPER_PATTERN = 8'h00; 
+		8'h16 : UPPER_PATTERN = 8'h00; 
+		8'h17 : UPPER_PATTERN = 8'h08; 
+		8'h18 : UPPER_PATTERN = 8'hF8; // H 
+		8'h19 : UPPER_PATTERN = 8'hF8; 
+		8'h1A : UPPER_PATTERN = 8'h88; 
+		8'h1B : UPPER_PATTERN = 8'h80; 
+		8'h1C : UPPER_PATTERN = 8'h80; 
+		8'h1D : UPPER_PATTERN = 8'h88; 
+		8'h1E : UPPER_PATTERN = 8'hF8; 
+		8'h1F : UPPER_PATTERN = 8'hF8;
+
+		8'h20 : UPPER_PATTERN = 8'h08; // E 
+		8'h21 : UPPER_PATTERN = 8'h08; 
+		8'h22 : UPPER_PATTERN = 8'hF8; 
+		8'h23 : UPPER_PATTERN = 8'hF8; 
+		8'h24 : UPPER_PATTERN = 8'h88; 
+		8'h25 : UPPER_PATTERN = 8'hC8; 
+		8'h26 : UPPER_PATTERN = 8'h18; 
+		8'h27 : UPPER_PATTERN = 8'h38; 
+		8'h28 : UPPER_PATTERN = 8'h08; // L 
+		8'h29 : UPPER_PATTERN = 8'hF8; 
+		8'h2A : UPPER_PATTERN = 8'hF8; 
+		8'h2B : UPPER_PATTERN = 8'h08; 
+		8'h2C : UPPER_PATTERN = 8'h00; 
+		8'h2D : UPPER_PATTERN = 8'h00; 
+		8'h2E : UPPER_PATTERN = 8'h00; 
+		8'h2F : UPPER_PATTERN = 8'h00;
+
+		8'h30 : UPPER_PATTERN = 8'h08; // L 
+		8'h31 : UPPER_PATTERN = 8'hF8; 
+		8'h32 : UPPER_PATTERN = 8'hF8; 
+		8'h33 : UPPER_PATTERN = 8'h08; 
+		8'h34 : UPPER_PATTERN = 8'h00; 
+		8'h35 : UPPER_PATTERN = 8'h00; 
+		8'h36 : UPPER_PATTERN = 8'h00; 
+		8'h37 : UPPER_PATTERN = 8'h00; 
+		8'h38 : UPPER_PATTERN = 8'hE0; // O 
+		8'h39 : UPPER_PATTERN = 8'hF0; 
+		8'h3A : UPPER_PATTERN = 8'h18; 
+		8'h3B : UPPER_PATTERN = 8'h08; 
+		8'h3C : UPPER_PATTERN = 8'h08; 
+		8'h3D : UPPER_PATTERN = 8'h18; 
+		8'h3E : UPPER_PATTERN = 8'hF0; 
+		8'h3F : UPPER_PATTERN = 8'hE0;
+
+		8'h40 : UPPER_PATTERN = 8'h00; //SPACE 
+		8'h41 : UPPER_PATTERN = 8'h00;
+		8'h42 : UPPER_PATTERN = 8'h00;
+		8'h43 : UPPER_PATTERN = 8'h00;
+		8'h44 : UPPER_PATTERN = 8'h00; 
+		8'h45 : UPPER_PATTERN = 8'h00; 
+		8'h46 : UPPER_PATTERN = 8'h00; 
+		8'h47 : UPPER_PATTERN = 8'h00; 
+		8'h48 : UPPER_PATTERN = 8'h08; // L 
+		8'h49 : UPPER_PATTERN = 8'hF8; 
+		8'h4A : UPPER_PATTERN = 8'hF8; 
+		8'h4B : UPPER_PATTERN = 8'h08; 
+		8'h4C : UPPER_PATTERN = 8'h00; 
+		8'h4D : UPPER_PATTERN = 8'h00; 
+		8'h4E : UPPER_PATTERN = 8'h00; 
+		8'h4F : UPPER_PATTERN = 8'h00;
+		8'h50 : UPPER_PATTERN = 8'h00; // C 
+		8'h51 : UPPER_PATTERN = 8'hE0; 
+		8'h52 : UPPER_PATTERN = 8'hF0; 
+		8'h53 : UPPER_PATTERN = 8'h18; 
+		8'h54 : UPPER_PATTERN = 8'h08; 
+		8'h55 : UPPER_PATTERN = 8'h08; 
+		8'h56 : UPPER_PATTERN = 8'h18; 
+		8'h57 : UPPER_PATTERN = 8'h30; 
+		8'h58 : UPPER_PATTERN = 8'h08; // D 
+		8'h59 : UPPER_PATTERN = 8'hF8; 
+		8'h5A : UPPER_PATTERN = 8'hF8; 
+		8'h5B : UPPER_PATTERN = 8'h08; 
+		8'h5C : UPPER_PATTERN = 8'h18; 
+		8'h5D : UPPER_PATTERN = 8'hF0; 
+		8'h5E : UPPER_PATTERN = 8'hE0; 
+		8'h5F : UPPER_PATTERN = 8'h00;
+
+		8'h60 : UPPER_PATTERN = 8'h00; // !
+		8'h61 : UPPER_PATTERN = 8'h00;
+		8'h62 : UPPER_PATTERN = 8'h00;
+		8'h63 : UPPER_PATTERN = 8'hF8;
+		8'h64 : UPPER_PATTERN = 8'hF8;
+		8'h65 : UPPER_PATTERN = 8'h00;
+		8'h66 : UPPER_PATTERN = 8'h00;
+		8'h67 : UPPER_PATTERN = 8'h00;
+		8'h68 : UPPER_PATTERN = 8'h00; // SPACE 
+		8'h69 : UPPER_PATTERN = 8'h00;
+		8'h6A : UPPER_PATTERN = 8'h00; 
+		8'h6B : UPPER_PATTERN = 8'h00; 
+		8'h6C : UPPER_PATTERN = 8'h00; 
+		8'h6D : UPPER_PATTERN = 8'h00; 
+		8'h6E : UPPER_PATTERN = 8'h00; 
+		8'h6F : UPPER_PATTERN = 8'h00;
+
+		8'h70 : UPPER_PATTERN = 8'h00; // SPACE
+		8'h71 : UPPER_PATTERN = 8'h00; // SPACE
+		8'h72 : UPPER_PATTERN = 8'h00; // SPACE
+		8'h73 : UPPER_PATTERN = 8'h00; // SPACE
+		8'h74 : UPPER_PATTERN = 8'h00; // SPACE 
+		8'h75 : UPPER_PATTERN = 8'h00; // SPACE
+		8'h76 : UPPER_PATTERN = 8'h00; // SPACE
+		8'h77 : UPPER_PATTERN = 8'h00; // SPACE
+
+		8'h78 : UPPER_PATTERN = 8'h00; // SPACE
+		8'h79 : UPPER_PATTERN = 8'h00;
+		8'h7A : UPPER_PATTERN = 8'h00;
+		8'h7B : UPPER_PATTERN = 8'h00;
+		8'h7C : UPPER_PATTERN = 8'h00;
+		8'h7D : UPPER_PATTERN = 8'h00;
+		8'h7E : UPPER_PATTERN = 8'h00;
+		8'h7F : UPPER_PATTERN = 8'h00;
+	endcase
+end
+
