@@ -306,3 +306,90 @@ always @(INDEX) begin
 		8'h7F : LOWER_PATTERN = 8'h00;
 	endcase	
 end
+
+/****************************** * Initialize and Write LCD Data * ******************************/
+always @(negedge LCD_CLK or negedge RESET) begin
+	if (!RESET) begin
+		CLEAR <= 1'b1; 
+		STATE <= 3'b0; 
+		DELAY <= 2'b00;
+		X_PAGE <= 3'o0; 
+		INDEX = 0; 
+		LCD_RST<= 1'b0; 
+		ENABLE <= 2'b00;
+		LCD_SEL<= 2'b11;
+		LCD_DI <= 1'b0; 
+		LCD_RW <= 1'b0;
+	end
+	else begin
+		if (ENABLE < 2'b10) begin
+			ENABLE <= ENABLE + 1;
+			DELAY[1]<= 1'b1;
+		end
+		else if (DELAY != 2'b00)
+			DELAY <= DELAY - 1; 
+		else if (STATE == 3'o0) begin
+			STATE <= 3'o1;
+			LCD_RST <= 1'b1; 
+			LCD_DATA<= 8'h3F; 
+			ENABLE <= 2'b00;
+		end
+		else if (STATE == 3'o1) begin
+			STATE <= 3'o2;
+			LCD_DATA<= {2'b11,6'b000000}; 
+			ENABLE <= 2'b00;
+		end
+		else if (STATE == 3'o2) begin
+			STATE <= 3'o3; 
+			LCD_DATA<= 8'h40; 
+			ENABLE <= 2'b00;
+		end
+		else if (STATE == 3'o3) begin
+			STATE <= 3'o4;
+			LCD_DI <= 1'b0;
+			INDEX = 0;
+			LCD_DATA<= {5'b10111,X_PAGE}; ENABLE <= 2'b00;
+		end
+		else if (STATE == 3'o4) begin
+			if (CLEAR) begin
+			if (INDEX < 64) begin
+			INDEX = INDEX + 1; LCD_DI <= 1'b1; LCD_DATA<= 8'h00; ENABLE <= 2'b00; end
+		else if (X_PAGE < 3'o7) begin
+			STATE <= 3'o3;
+			X_PAGE <= X_PAGE + 1; 
+		end
+		else begin
+			STATE <= 3'o3; 
+			X_PAGE <= 3'o3; 
+			CLEAR <= 1'b0; end
+		end
+		else if((X_PAGE == 3'o3) || (x_PAGE == 3'o4)) begin
+			if(INDEX < 128) begin
+				LCD_DI <= 1'b1;
+				if(X_PAGE == 3'o3)
+					LCD_DATA <= UPPER_PATTERN;
+				else
+					LCD_DATA <= LOWER_PATTERN;
+				if(INDEx < 64)
+					LCD_SEL <= 2'b01;
+				else
+					LCD_SEL <= 2'b10;
+				INDEX = INDEX + 1;
+				ENABLE <= 2'b00;
+			end
+			else
+				begin
+					LCD_SEL <= 2'b11;
+					STATE <= 3'o3;
+					X_PAGE <= X_PAGE + 1;
+				end
+			end
+		end
+	end
+end
+
+assign LCD_ENABLE = ENABLE[0];
+assign LCD_CS1 = LCD_SEL[0];
+assign LCD_CS2 = LCS_SEL[1];
+
+endmodule
