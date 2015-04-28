@@ -9,7 +9,7 @@ output LCD_CS2;
 output LCD_RST; 
 output [7:0] LCD_DATA;
 reg [5:0] START_LINE = 6'd0;
-reg [5:0] NEXT_LINE = 6'd0;
+reg [5:0] NEXT_LINE = 6'd165;
 reg [7:0] LCD_DATA;
 reg [7:0] UPPER_PATTERN; 
 reg [7:0] LOWER_PATTERN; 
@@ -347,7 +347,7 @@ end
 
 always @(negedge LCD_RESET or negedge RESET) begin
 	if(!RESET)
-		NEXT_LINE = 6'd0;
+		NEXT_LINE = 6'd165;
 	else
 		NEXT_LINE = NEXT_LINE + 6'd1;
 end
