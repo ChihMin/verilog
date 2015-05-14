@@ -17,7 +17,7 @@ module HW7_2_t;
 	wire	[3:0] DIGIT; 
 	wire	[7:0] DISPLAY;
 					
-	lab10 YAY(
+	HW7_2 homework(
 			clk, rst_n, cancel, 
 			tea, coke, sprite, 
 			money_5, money_10, money_50,
@@ -34,7 +34,8 @@ module HW7_2_t;
 
 
 	initial	begin
-		clk = 0; rst_n = 0; coin5 = 0; coin10 = 0;
+		clk = 0; rst_n = 0; money_5 = 0; money_10 = 0; 
+		money_50 = 0;
 		tea = 0; coke = 0; sprite = 0;
 		cancel = 0;
 		

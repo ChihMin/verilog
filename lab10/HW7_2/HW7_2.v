@@ -1,10 +1,16 @@
-module lab10(
+module HW7_2(
 	input clk, rst_n, cancel, 
 			tea, coke, sprite, 
 			money_5, money_10, money_50,
-	output reg drop_tea, drop_coke, drop_sprite,
-			 [3:0] DIGIT, [7:0] DISPLAY, [7:0] money
+	output drop_tea, drop_coke, drop_sprite,
+			 DIGIT, DISPLAY, money
 );
+
+reg drop_tea, drop_coke, drop_sprite;
+			 
+reg [3:0] DIGIT; 
+reg [7:0] DISPLAY;
+reg [7:0] money;
 
 reg buy_tea = 1'b0, buy_coke = 1'b0, buy_sprite = 1'b0;
 reg [3:0] state = 4'd0, next_state;  
