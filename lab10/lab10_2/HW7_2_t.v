@@ -49,8 +49,10 @@ module HW7_2_t;
 	initial fork
 		#10 money_5 = 1;
 		#20 money_5 = 0;
-		#30 money_10 = 1;
-		#40 money_10 = 0;
+		#30 money_50 = 1;
+		#40 money_50 = 0;
+		#50 tea = 1;
+		#60 tea = 0;
 		#210 cancel = 1;
 
 	join
