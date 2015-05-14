@@ -1,22 +1,26 @@
 module HW7_2(
-	input clk, rst_n, cancel, 
-			tea, coke, sprite, 
-			money_5, money_10, money_50,
-	output drop_tea, drop_coke, drop_sprite,
-			 DIGIT, DISPLAY, money
+	clk, rst_n, cancel, 
+	tea, coke, sprite, 
+	money_5, money_10, money_50,
+	drop_tea, drop_coke, drop_sprite,
+	DIGIT, DISPLAY, money
 );
 
-reg drop_tea, drop_coke, drop_sprite;
-			 
-reg [3:0] DIGIT; 
-reg [7:0] DISPLAY;
-reg [7:0] money;
+input clk, rst_n, cancel;
+input tea, coke, sprite;
+input money_5, money_10, money_50;			 
+output reg drop_tea = 1'b1;
+output reg drop_coke = 1'b1;
+output reg drop_sprite = 1'b1;
+output reg [3:0] DIGIT = 8'd0; 
+output reg [7:0] DISPLAY = 8'd0;
+output reg [7:0] money = 8'd0;
 
 reg buy_tea = 1'b0, buy_coke = 1'b0, buy_sprite = 1'b0;
 reg [3:0] state = 4'd0, next_state;  
 
 
-parameter	S0 = 4'd0, S1 = 4'd1, S2 = 4'd2,
+parameter		S0 = 4'd0, S1 = 4'd1, S2 = 4'd2,
 				S3 = 4'd3, S4 = 4'd4, S5 = 4'd5,
 				S6 = 4'd6, S7 = 4'd7, S8 = 4'd8,
 				S9 = 4'd9, S10= 4'd10,S11= 4'd11;  
@@ -24,7 +28,8 @@ parameter	S0 = 4'd0, S1 = 4'd1, S2 = 4'd2,
 
 always@(posedge clk, negedge rst_n) begin
 	if(!rst_n) begin
-		state <= s0;
+		money <= 8'd0;
+		state <= S0;
 		drop_tea <= 1'b1;
 		drop_coke <= 1'b1;
 		drop_sprite <= 1'b1;
@@ -38,7 +43,7 @@ always@(state, money_5, money_10, money_50, tea, coke, sprite, cancel) begin
 		S0:
 			begin
 				if(cancel)
-					state¡@<= S1;
+					next_state= S1;
 				else begin
 					if(money_5) begin
 						money = money + 8'd5;
@@ -108,19 +113,19 @@ end
 always@(money) begin
 	if(money >= 25) begin
 		drop_tea = 1'b0;
-		drop_cole = 1'b0;
+		drop_coke = 1'b0;
 		drop_sprite = 1'b0;
 	end
 	else if(money >= 20) begin
 		drop_tea = 1'b0;
-		drop_cole = 1'b0;
+		drop_coke = 1'b0;
 	end
 	else if(money >= 15) begin
 		drop_tea = 1'b0;
 	end
 	else begin
 		drop_tea = 1'b1;
-		drop_cole = 1'b1;
+		drop_coke = 1'b1;
 		drop_sprite = 1'b1;
 	end
 end

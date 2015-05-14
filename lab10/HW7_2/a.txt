@@ -1,0 +1,5 @@
+   0 ---> ava_tea 1, ava_coke 1, ava_sprite 1; money5 = 0, money_10 = 0, money_50 = 0, total =   0
+  10 ---> ava_tea 1, ava_coke 1, ava_sprite 1; money5 = 1, money_10 = 0, money_50 = 0, total =   5
+ 110 ---> ava_tea 1, ava_coke 1, ava_sprite 1; money5 = 0, money_10 = 0, money_50 = 0, total =   5
+ 190 ---> ava_tea 0, ava_coke 1, ava_sprite 1; money5 = 0, money_10 = 1, money_50 = 0, total =  15
+ 230 ---> ava_tea 1, ava_coke 1, ava_sprite 1; money5 = 0, money_10 = 0, money_50 = 0, total =  10
