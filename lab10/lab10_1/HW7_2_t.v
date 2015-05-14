@@ -16,20 +16,21 @@ module HW7_2_t;
 	wire	[7:0] money;
 	wire	[3:0] DIGIT; 
 	wire	[7:0] DISPLAY;
+	wire	state;
 					
 	HW7_2 homework(
 			clk, rst_n, cancel, 
 			tea, coke, sprite, 
 			money_5, money_10, money_50,
 			drop_tea, drop_coke, drop_sprite,
-			DIGIT, DISPLAY, money
+			DIGIT, DISPLAY, money, state
 	);
 	
 	initial begin
-		$monitor($time, " ---> ava_tea %d, ava_coke %d, ava_sprite %d; money5 = %d, money_10 = %d, money_50 = %d, total = %d",
+		$monitor($time, " ---> tea %d, coke %d, sprite %d; money5 = %d, money_10 = %d, money_50 = %d, total = %d, state = %d",
 						
 						drop_tea, drop_coke, drop_sprite,
-						money_5, money_10, money_50, money);
+						money_5, money_10, money_50, money, state);
 	end
 
 
@@ -46,14 +47,12 @@ module HW7_2_t;
 		clk = ~clk;
 	
 	initial fork
-		#10 money_5 = 1;	
-		#110 money_5 = 0;
-		#110 tea = 1;
-		#112 tea = 0;
+		#10 money_5 = 1;
+		#20 money_5 = 0;
+		#30 money_10 = 1;
+		#40 money_10 = 0;
+		#210 cancel = 1;
 
-		#190 money_10 = 1;
-		#230 money_10 = 0;
-		#230 cancel = 1;	
 	join
 	
 	initial
