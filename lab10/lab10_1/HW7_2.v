@@ -1,21 +1,19 @@
-module HW7_2(
-	clk, rst_n, cancel, 
-	tea, coke, sprite, 
-	money_5, money_10, money_50,
-	drop_tea, drop_coke, drop_sprite,
-	ENABLE, SEGMENT
-);
+module HW7_2(clk, rst_n, cancel, tea, coke, sprite, money5, money_10, money_50,drop_tea, drop_coke, drop_sprite,ENABLE, SEGMENT);
 
 input clk, rst_n, cancel;
 input tea, coke, sprite;
-input money_5, money_10, money_50;			 
+input money5;
+input money_10;
+input money_50;
 output reg drop_tea = 1'b0;
 output reg drop_coke = 1'b0;
 output reg drop_sprite = 1'b0;
 output reg [3:0] ENABLE = 4'b1011; 
 output reg [7:0] SEGMENT = 8'd0;
 
+
 reg [7:0] money = 8'd0;
+reg [7:0] next_money = 8'd0;
 reg [3:0] DECODE_BCD;
 reg [15:0] KEY_BUFFER;
 reg [25:1] LCD_DIVIDER;
@@ -44,9 +42,11 @@ assign CLK = LCD_DIVIDER[25];
 always@(posedge CLK, negedge rst_n) begin
 	if(!rst_n) begin
 		state = S0;
+		money = 8'd0;
 	end
 	else begin
 		state = next_state;
+		money = next_money;
 		if(state == S1)
 			exist = ~exist;
 		else
@@ -54,14 +54,14 @@ always@(posedge CLK, negedge rst_n) begin
 	end
 end
 
-always@(state, money_5, money_10, money_50, tea, coke, sprite, cancel, rst_n) begin
+always@(state, money5, money_10, money_50, tea, coke, sprite, cancel, rst_n, money) begin
 	case(state)
 		S0:
 			begin
 				if(!cancel)
 					next_state= S1;
 				else begin
-					if(!money_5) begin
+					if(!money5) begin
 						next_state = S0;
 					end
 					else if(!money_10) begin
@@ -109,63 +109,63 @@ end
 
 
 
-always@(state, money_5, money_10, money_50, tea, coke, sprite, cancel, exist, rst_n) begin
+always@(state, money5, money_10, money_50, tea, coke, sprite, cancel, rst_n, money) begin
 	case(state)
 		S0:
 			begin		
 				if (!rst_n) begin
-					money = 0;
+					next_money = 0;
 				end	
 				else begin
-					if(!money_5) begin
+					if(!money5) begin
 						if(money + 8'd5 > 8'd50)
-							money = money - 8'd5;
+							next_money = 8'd50;
 						else
-							money = money + 8'd0;
+							next_money = money + 8'd5;
 					end
 					else if(!money_10) begin
 						
 						if(money + 8'd10 > 8'd50) begin
-							money = money - 8'd10;
+							next_money = 8'd50;
 						end
 						else
-							money = money + 8'd0;
+							next_money = money + 8'd10;
 					end
 					else if(!money_50) begin
-						money = 8'd50;
+						next_money = 8'd50;
 					end
 					else if(!tea) begin		
 						if(money >= 8'd15) begin
-							money = money - 8'd10; 
+							next_money = money - 8'd15; 
 						end
 						else
-							money = money + 8'd0;
+							next_money = money;
 					end
 					else if(!coke) begin
 						if(money >= 8'd20) begin
-							money = money - 8'd15;
+							next_money = money - 8'd20;
 						end
 						else
-							money = money + 8'd0;
+							next_money = money;
 					end
 					else if(!sprite) begin
 						if(money >= 8'd25) begin
-							money = money - 8'd20;
+							next_money = money - 8'd25;
 						end
 						else
-							money = money + 8'd0;
+							next_money = money;
 					end
 					else 
-						money = money + 8'd0;		
+						next_money = money ;	
 				end
 			end
 		
 		S1:
 			begin
 				if(money == 8'd0)
-					money = money + 8'd0;
+					next_money = money + 8'd0;
 				else	begin
-					money = money - 8'd5;
+					next_money = money - 8'd5;
 				end
 			end
 	endcase
