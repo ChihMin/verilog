@@ -1,33 +1,82 @@
-module HW7_2(clk, rst_n, cancel, tea, coke, sprite, money5, money_10, money_50,drop_tea, drop_coke, drop_sprite,ENABLE, SEGMENT);
+module HW7_2(clk, rst_n, cancel_d, 
+				 tea_d, coke_d, sprite_d, 
+				 money5_d, money_10_d, money_50_d,
+				 drop_tea, drop_coke, drop_sprite,
+				 ENABLE, SEGMENT
+);
+/*
+	input clk, rst_n, cancel;
+	input tea, coke, sprite;
+	input money5;
+	input money_10;
+	input money_50;
+*/
 
-input clk, rst_n, cancel;
-input tea, coke, sprite;
-input money5;
-input money_10;
-input money_50;
+
+input clk, rst_n;
+input cancel_d;
+input tea_d, coke_d, sprite_d;
+input money5_d;
+input money_10_d;
+input money_50_d;
+
+wire cancel_i;
+wire tea_i, coke_i, sprite_i;
+wire money5_i;
+wire money_10_i;
+wire money_50_i;
+
+wire clk, rst_n, cancel;
+wire tea, coke, sprite;
+wire money5;
+wire money_10;
+wire money_50;
+
 output reg drop_tea = 1'b0;
 output reg drop_coke = 1'b0;
 output reg drop_sprite = 1'b0;
-output reg [3:0] ENABLE = 4'b1011; 
+output reg [3:0] ENABLE = 4'b0111; 
 output reg [7:0] SEGMENT = 8'd0;
 
 
-reg [7:0] money = 8'd0;
-reg [7:0] next_money = 8'd0;
+reg [7:0] money = 8'b00000000;
+reg [7:0] next_money = 8'b00000000;
 reg [3:0] DECODE_BCD;
 reg [15:0] KEY_BUFFER;
 reg [25:1] LCD_DIVIDER;
 reg [14:1] DIVIDER;
 
 reg buy_tea = 1'b0, buy_coke = 1'b0, buy_sprite = 1'b0;
-reg state = 1'd0; 
+reg state = 1'b0; 
 reg next_state;  
 reg exist = 1'b0;
 
 wire CLK;
-
 parameter		S0 = 1'b0, S1 = 1'b1;
 
+/*
+	wire cancel_i;
+	wire tea_i, coke_i, sprite_i;
+	wire money5_i;
+	wire money_10_i;
+	wire money_50_i;
+*/
+
+debounce DEBOUNCE1(cancel_i ,cancel_d, clk);
+debounce DEBOUNCE2(tea_i, tea_d, clk);
+debounce DEBOUNCE3(coke_i, coke_d, clk);
+debounce DEBOUNCE4(sprite_i, sprite_d, clk);
+debounce DEBOUNCE5(money5_i, money5_d, clk);
+debounce DEBOUNCE6(money_10_i, money_10_d, clk);
+debounce DEBOUNCE7(money_50_i, money_50_d, clk);
+
+onepulse PULSE1(cancel_i, CLK, cancel);
+onepulse PULSE2(tea_i, CLK, tea);
+onepulse PULSE3(coke_i, CLK, coke);
+onepulse PULSE4(sprite_i, CLK, sprite);
+onepulse PULSE5(money5_i, CLK, money5);
+onepulse PULSE6(money_10_i, CLK, money_10);
+onepulse PULSE7(money_50_i, CLK, money_50);
 
 always @(posedge clk or negedge rst_n)
 	begin
@@ -42,17 +91,21 @@ assign CLK = LCD_DIVIDER[25];
 always@(posedge CLK, negedge rst_n) begin
 	if(!rst_n) begin
 		state = S0;
-		money = 8'd0;
 	end
 	else begin
 		state = next_state;
-		money = next_money;
-		if(state == S1)
-			exist = ~exist;
-		else
-			exist = exist;
 	end
 end
+
+always@(posedge CLK, negedge rst_n) begin
+	if(!rst_n) begin
+		money = 8'd0;
+	end
+	else begin
+		money = next_money;
+	end
+end
+
 
 always@(state, money5, money_10, money_50, tea, coke, sprite, cancel, rst_n, money) begin
 	case(state)
@@ -156,7 +209,7 @@ always@(state, money5, money_10, money_50, tea, coke, sprite, cancel, rst_n, mon
 							next_money = money;
 					end
 					else 
-						next_money = money ;	
+						next_money = money + 8'd0 ;	
 				end
 			end
 		
@@ -283,3 +336,4 @@ always @(DECODE_BCD)
 
 
 endmodule
+
